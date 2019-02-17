@@ -4,15 +4,17 @@ import { Button, Header, Icon, Image, Menu, Segment, Sidebar } from 'semantic-ui
 import axios from 'axios'
 import ClassPicker from './components/ClassPicker'
 import MainChart from './components/MainChart'
+import LeagueList from './components/LeagueList'
 import './App.css'
 import classes from './classes.js'
 import mlbTeams from './mlbTeams.js'
-
-console.log(classes[0])
+import leagues from './assets/leagues.js'
+console.log(leagues)
 const yrs = [2013, 2014, 2015, 2016, 2017, 2018]
 function App() {
   
   const [minorClass, setClasses] = useState(classes);
+  const [minorLeagues, setLeagues] = useState(leagues);
   const [selectedClass, setSelectedClass] = useState(classes[0]);
   const [minors, setMinors] = useState({});
   const [years, setYears] = useState(yrs);
@@ -52,13 +54,10 @@ function App() {
 
 
   return (
-            <div className="App">
+       <div className="App">
         <Button.Group>
           <Button disabled={visible} onClick={() => setVisible(true)}>
             Show leagues
-          </Button>
-          <Button disabled={!visible} onClick={() => setVisible(false)}>
-            Hide leagues
           </Button>
         </Button.Group>
 
@@ -79,8 +78,9 @@ function App() {
           </Sidebar.Pusher>
         </Sidebar.Pushable>
         <div className="chart">
-         <MainChart {...bestMinors} />
+         <MainChart {...bestMinors} {...minors}/>
        </div>
+
       </div>
 
     

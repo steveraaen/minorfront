@@ -1,28 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { AreaChart, BarChart, Legend, Bar, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
-
+import { AreaChart, BarChart, Label, Legend, Bar, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 
 function MainChart(props) {
 
 
 
     return (
-    	<div>
-     <BarChart
-        width={2000}
-        height={600}
+    	<div style={{left: '25vw', top: '8vh', position: 'absolute'}}>
+      <BarChart
+        layout="vertical"
+        width={1000}
+        height={1000}
         data={props.bestMinors}
         margin={{
-          top: 5, right: 30, left: 20, bottom: 5,
+          top: 20, right: 20, bottom: 20, left: 20,
         }}
+        legendType='line'
       >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="team" />
-        <YAxis />
+        <CartesianGrid stroke="#f5f5f5" />
+        <XAxis type="number" />
+       
+        <YAxis dataKey="team" width={100} type="category" />
         <Tooltip />
         <Legend />
-        <Bar dataKey="playerCount" fill="#8884d8" />
-        
+        <Bar barGap={0} dataKey="playerCount"  label={{ position: 'center', fill: 'white' }}barSize={30} fill="#413ea0" />
+    
       </BarChart>
       </div>
     );
