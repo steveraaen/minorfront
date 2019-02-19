@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Header, Icon, Image, Menu, Segment, Sidebar } from 'semantic-ui-react'
-
 import '../App.css'
-
 
 function ClassPicker(props) {
   function handleClick(e) {
@@ -15,6 +13,7 @@ function ClassPicker(props) {
         as='a'
         key={lvl.regex}>
         <Button 
+          inverted color='orange'
           onClick={() => handleClick(lvl)}  
           value={lvl.code}>
           {lvl.name}
@@ -22,8 +21,6 @@ function ClassPicker(props) {
         </Menu.Item>
         )
           }) 
-
-
     return (
       <div>        
          <div>

@@ -1,24 +1,12 @@
-
-.App {
-  flex: 1;
-  height: 100vh;
+.header {
+  text-align: center;
+  padding-top: 5vh;
 }
-.selectMinorClass {
-  font-size: 24pt;
-  height: 6vh;
-  top: 10vh;
-  left: 5vw;
-  position: absolute;
+.topselect {
+  text-align: center;
+  padding-top: 5vh;
 }
-.optionMinorClass {
-	background-color: white;
-	padding: 2vw;
-	margin: 1vw;
-}
-.chart {
-  top: 0;
-  left: 10vw;
-  position: absolute;
-
-  width: 50vw;
+.topSummary {
+  font-size: 20;
+  margin-top: 1vh;
 }

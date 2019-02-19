@@ -6,14 +6,14 @@ function MainChart(props) {
 
 
     return (
-    	<div style={{left: '25vw', top: '8vh', position: 'absolute'}}>
+    	<div >
       <BarChart
         layout="vertical"
-        width={1000}
-        height={1000}
+        width={2000}
+        height={2000}
         data={props.bestMinors}
         margin={{
-          top: 20, right: 20, bottom: 20, left: 20,
+          top: 10, right: 10, bottom: 10, left: 10,
         }}
         legendType='line'
       >
