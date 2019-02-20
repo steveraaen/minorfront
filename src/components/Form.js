@@ -4,6 +4,9 @@ import { Form } from 'semantic-ui-react'
 
 
 function FormA(props) { 
+	 function handleChange(e) {
+	 	props.getBestMinors(e.value)
+	 }
 	console.log(props)
 const options = [
   { key: 'm', text: 'Male', value: 'male' },
@@ -26,7 +29,8 @@ var value;
 				value: tm.league,
 				image: tm.logo,
 				franchise: tm.franchise,
-				key: tm.league
+				key: tm.league,
+				action: handleChange(tm,{})
 			}
 		return semanticMinorL
 	})
@@ -38,7 +42,7 @@ var value;
 			}
 		return semanticClasses
 	})	
-	  function handleChange(e, { value }) {this.setState({ value })}
+	 
 	return (
       <Form>
         <Form.Group widths='equal'>
@@ -48,29 +52,8 @@ var value;
           <Form.Select fluid label='Year' options={props.years} placeholder='2018' />
           
         </Form.Group>
-        <Form.Group inline>
-          <label>Size</label>
-          <Form.Radio
-            label='Small'
-            value='sm'
-            checked={value === 'sm'}
-            onChange={console.log('changed')}
-          />
-          <Form.Radio
-            label='Medium'
-            value='md'
-            checked={value === 'md'}
-            onChange={console.log('changed')}
-          />
-          <Form.Radio
-            label='Large'
-            value='lg'
-            checked={value === 'lg'}
-            onChange={console.log('changed')}
-          />
-        </Form.Group>
+
         <Form.Button>Submit</Form.Button>
       </Form>
-
 )}
 export default FormA

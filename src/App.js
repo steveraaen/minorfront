@@ -79,7 +79,7 @@ function App() {
       </Grid.Row>
       <Grid.Row>
             <Grid.Column width={16}>
-          <FormA allMLB={allMLB} minorLeagues={minorLeagues} years={years} classes={classes}/>
+          <FormA getBestMinors={getBestMinors} allMLB={allMLB} minorLeagues={minorLeagues} years={years} classes={classes}/>
       </Grid.Column>
       </Grid.Row>
   </Grid>
