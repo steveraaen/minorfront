@@ -2,11 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { Button, Grid,Header, Icon, Image, Menu, Segment, Sidebar, Table } from 'semantic-ui-react'
 import '../App.css'
 
-function ClassPicker(props) {
-  function handleClick(c, r) {
+function YearPicker(props) {
+  function handleClick(c, r, y) {
+    console.log(typeof y)  
+      props.getBestMinors(c, r, y) 
+}
+  return(
+    <div>
+        <Button.Group>
+        { props.years.map((yr, idx) => {
+          return(
+             <Button key={idx} onClick={() => handleClick(props.selectedClass.code, props.selectedClass.regex, yr.value)}>{yr.text}</Button>
+            )
+        })
+         
+        }
+        </Button.Group>
+  </div>
+    )
+}
 
+function ClassPicker(props) {
+  function handleClick(c, r, y) {
     console.log()  
-      props.getBestMinors(c, r) 
+      props.getBestMinors(c, r, y) 
 }
 /*  var mappedClasses = props.classes.map((tm, idx) => {
     var semanticClasses = {
@@ -22,7 +41,7 @@ function ClassPicker(props) {
         <Button.Group>
         { props.classes.map((cl, idx) => {
           return(
-             <Button key={cl.regex} onClick={() => handleClick(cl.code, cl.regex)}>{cl.name}</Button>
+             <Button key={cl.regex} onClick={() => handleClick(cl.code, cl.regex, props.selectedYear)}>{cl.name}</Button>
             )
         })
          
@@ -71,7 +90,7 @@ function MLBMaster(props) {
   </div>
 )
 }
-export { MLBMaster, ClassPicker} ;
+export { MLBMaster, ClassPicker, YearPicker} ;
 
 
 

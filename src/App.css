@@ -4,7 +4,7 @@
 }
 .topSelect {
 	display: flex;
-	justify-content: center;
+/*	justify-content: center;*/
 }
 .topSummary {
   font-size: 20;
