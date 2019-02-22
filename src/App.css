@@ -2,9 +2,9 @@
   text-align: center;
   padding-top: 5vh;
 }
-.topselect {
-  text-align: center;
-  padding-top: 5vh;
+.topSelect {
+	display: flex;
+	justify-content: center;
 }
 .topSummary {
   font-size: 20;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Button } from 'semantic-ui-react'
 
 import axios from 'axios'
+import { ClassPicker, MLBMaster} from './components/Selections.js'
 /*import ClassPicker from './components/ClassPicker'
 import LeagueList from './components/LeagueList'
 import MLBMaster from './components/MLBMaster'*/
@@ -26,7 +27,7 @@ function App() {
   const [selectedClass, setSelectedClass] = useState(classes[0]);
   const [minors, setMinors] = useState({});
   const [years, setYears] = useState(yrs);
-  const [bestMinors, setBestMinors] = useState({});
+  const [bestMinors, setBestMinors] = useState();
   const [allMLB] = useState(mlbTeams);
   
   async function getMinors() {
@@ -67,19 +68,17 @@ function App() {
         <h1>Minor League Connector </h1>
       </Grid.Column>
     </Grid.Row>
-    <Grid.Row className="topselect">
+    <Grid.Row>
       <Grid.Column width={16}>
-        <Button.Group>
-          <Button>By Minor League</Button>
-          <Button>By Minor League Level</Button>
-          <Button>By Minor League Team</Button>
-          <Button>By Major League Team</Button>
-          </Button.Group>
+     <div className='topSelect'>
+    <ClassPicker classes={classes} getBestMinors={getBestMinors}/>
+    </div>
       </Grid.Column>
       </Grid.Row>
       <Grid.Row>
             <Grid.Column width={16}>
-          <FormA getBestMinors={getBestMinors} allMLB={allMLB} minorLeagues={minorLeagues} years={years} classes={classes}/>
+         <MainChart {...bestMinors} />
+
       </Grid.Column>
       </Grid.Row>
   </Grid>

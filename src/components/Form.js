@@ -4,8 +4,10 @@ import { Form } from 'semantic-ui-react'
 
 
 function FormA(props) { 
-	 function handleChange(e) {
-	 	props.getBestMinors(e.value)
+	 function handleClick(e) {
+	 	e.preventDefault()
+	 	console.log(e)
+	 	props.getBestMinors(e)
 	 }
 	console.log(props)
 const options = [
@@ -29,8 +31,7 @@ var value;
 				value: tm.league,
 				image: tm.logo,
 				franchise: tm.franchise,
-				key: tm.league,
-				action: handleChange(tm,{})
+				key: tm.league
 			}
 		return semanticMinorL
 	})
@@ -46,8 +47,8 @@ var value;
 	return (
       <Form>
         <Form.Group widths='equal'>
-          <Form.Select fluid label='By Minor League Class' options={mappedClasses} placeholder='Triple A' />
-          <Form.Select fluid label='By Minor League' options={mappedMinorL} placeholder='All' />
+          <Form.Select onChange={() => handleClick(value)} fluid label='By Minor League Class' options={mappedClasses} placeholder='Triple A' />
+          <Form.Select  fluid label='By Minor League' options={mappedMinorL} placeholder='All' />
 
           <Form.Select fluid label='Year' options={props.years} placeholder='2018' />
           

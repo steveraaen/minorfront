@@ -4,7 +4,7 @@ import { AreaChart, BarChart, Label, Legend, Bar, Area, XAxis, YAxis, CartesianG
 function MainChart(props) {
 
 
-
+  
     return (
     	<div >
       <BarChart
