@@ -12,6 +12,8 @@ import './App.css'
 import classes from './classes.js'
 import mlbTeams from './mlbTeams.js'
 import leagues from './assets/leagues.js'
+import newMinors from './assets/newMinors.js'
+
 console.log(leagues)
 const yrs = [
           {text: "2013", value: 2013, key: "2013"}, 
@@ -78,15 +80,17 @@ function App() {
     </div>
 
       </Grid.Column>
+      <Grid.Row>
       <Grid.Column width={12}>
-     <div className='topSelect'>
+     <div>
     <YearPicker years={years} classes={classes} selectedClass={selectedClass} getBestMinors={getBestMinors} selectedYear={selectedYear}/>
     </div>
 
       </Grid.Column>
       </Grid.Row>
+      </Grid.Row>
       <Grid.Row>
-            <Grid.Column width={16}>
+            <Grid.Column width={8}>
          <MainChart {...bestMinors} />
 
       </Grid.Column>

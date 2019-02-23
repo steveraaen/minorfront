@@ -4,13 +4,13 @@ import { AreaChart, BarChart, Label, Legend, Bar, Area, XAxis, YAxis, CartesianG
 function MainChart(props) {
 
 
-  
+
     return (
     	<div >
       <BarChart
         layout="vertical"
-        width={2000}
-        height={2000}
+        width={800}
+        height={800}
         data={props.bestMinors}
         margin={{
           top: 10, right: 10, bottom: 10, left: 10,
