@@ -14,8 +14,7 @@ function YearPicker(props) {
           return(
              <Button key={idx} onClick={() => handleClick(props.selectedClass.code, props.selectedClass.regex, yr.value)}>{yr.text}</Button>
             )
-        })
-         
+        })        
         }
         </Button.Group>
   </div>
@@ -41,10 +40,9 @@ function ClassPicker(props) {
         <Button.Group>
         { props.classes.map((cl, idx) => {
           return(
-             <Button key={cl.regex} onClick={() => handleClick(cl.code, cl.regex, props.selectedYear)}>{cl.name}</Button>
+             <Button basic color='teal' key={cl.regex} onClick={() => handleClick(cl.code, cl.regex, props.selectedYear)}>{cl.name}</Button>
             )
-        })
-         
+        })         
         }
         </Button.Group>
   </div>
@@ -90,7 +88,33 @@ function MLBMaster(props) {
   </div>
 )
 }
-export { MLBMaster, ClassPicker, YearPicker} ;
+function MinorTeamPicker (props) {
+  function handleClick(c, r, y) {
+  
+      props.getBestMinors(c, r, y) 
+}
+  return(
+    <div>       
+        { props.allMiLB.map((tm, idx) => {
+          return(
+             <div key={idx} style={{fontSize: 20, fontWeight:600}}>
+             
+             <Image 
+             width={80}
+               src={tm.logo} 
+               onClick={() => handleClick(props.selectedClass.code, props.selectedClass.regex, props.selectedYear,tm.team)}
+                />
+                {tm.team}
+             </div>
+            )
+        })        
+        }
+        
+  </div>
+    )
+}
+
+export { MLBMaster, ClassPicker, MinorTeamPicker, YearPicker} ;
 
 
 

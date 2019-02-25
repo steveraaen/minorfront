@@ -1,4 +1,4 @@
-var newMinors =[
+var allMinorTeams =[
 	{
 		"ID" : 1,
 		"team" : "Akron RubberDucks",
@@ -2295,4 +2295,4 @@ var newMinors =[
 		"logo" : null
 	}
 ]
-module.exports = newMinors
+module.exports = allMinorTeams

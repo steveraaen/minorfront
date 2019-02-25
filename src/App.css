@@ -1,12 +1,8 @@
-.header {
-  text-align: center;
-  padding-top: 5vh;
+body {
+  background-color: cornSilk;
+  padding: 5vw;
 }
-.topSelect {
-	display: flex;
-/*	justify-content: center;*/
-}
-.topSummary {
-  font-size: 20;
-  margin-top: 1vh;
+.milbList {
+  height: 30vh;
+  overflow: scroll;
 }
