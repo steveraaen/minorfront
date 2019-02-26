@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { AreaChart, BarChart, Label, Legend, Bar, Area, XAxis, YAxis, CartesianGrid, RadialBar, RadialBarChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { AreaChart, BarChart, Label, Legend, Bar, Area, XAxis, YAxis, CartesianGrid, RadialBar, RadialBarChart, Tooltip } from 'recharts';
+import { Button, Image, Popup } from 'semantic-ui-react'
 
 function MainChart(props) {
 
@@ -16,16 +17,35 @@ function MainChart(props) {
     radObj.logo= tm.logo
     return radObj
   })
+  var renderTooltip = () =>{
+    props.bestMinors.map((mltm, idx) => {
+        return (
+          <div>
+       <div>{mltm.team}</div>
+       <div><Image src={mltm.logo}/></div>
+   </div>
+  )
+    })
+
 }
-
-
+  var ttip = props.bestMinors.map((tt, idx) => {
+    return (
+    <Popup
+        key={tt.name}        
+        header={tt.name}
+        content={<Image src={tt.logo}/>}
+        />
+    
+    )
+  })
+} 
     return (
     	<div >
       <RadialBarChart 
         width={1600} 
         height={1200} 
-        innerRadius="80%" 
-        outerRadius="10%" 
+        innerRadius="10%" 
+        outerRadius="80%" 
         data={radData} 
         startAngle={180} 
         endAngle={0}
@@ -39,9 +59,10 @@ function MainChart(props) {
     background 
     clockWise={true} 
     dataKey='value' 
+    onMouseEnter={() => console.log()}
     />
       <Legend iconSize={30} width={300} height={140} layout='vertical' verticalAlign='top' align="right"/>
-      <Tooltip />
+      <Tooltip content={renderTooltip} />
 </RadialBarChart>
       <BarChart
         layout="vertical"
@@ -65,10 +86,5 @@ function MainChart(props) {
       </div>
     );
   }
-
-
-
-
-
 
 export default MainChart
