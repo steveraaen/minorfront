@@ -2,7 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { AreaChart, BarChart, Label, Legend, Bar, Area, XAxis, YAxis, CartesianGrid, RadialBar, RadialBarChart, Tooltip } from 'recharts';
 import { Button, Image, Popup } from 'semantic-ui-react'
 
+
+
 function MainChart(props) {
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active) {
+  console.log(payload)
+    return (
+      <div className="custom-tooltip">
+      
+        <p className="label">{`${label} : ${payload[0].value}`}</p>
+        <p className="desc">Anything you want can be displayed here.</p>
+      </div>
+    );
+  }
+  return null;
+};
 
   if(props.bestMinors && props.allMLB) {
   var radData = props.bestMinors.map((tm, idx) => {
@@ -17,27 +32,7 @@ function MainChart(props) {
     radObj.logo= tm.logo
     return radObj
   })
-  var renderTooltip = () =>{
-    props.bestMinors.map((mltm, idx) => {
-        return (
-          <div>
-       <div>{mltm.team}</div>
-       <div><Image src={mltm.logo}/></div>
-   </div>
-  )
-    })
 
-}
-  var ttip = props.bestMinors.map((tt, idx) => {
-    return (
-    <Popup
-        key={tt.name}        
-        header={tt.name}
-        content={<Image src={tt.logo}/>}
-        />
-    
-    )
-  })
 } 
     return (
     	<div >
@@ -59,11 +54,11 @@ function MainChart(props) {
     background 
     clockWise={true} 
     dataKey='value' 
-    onMouseEnter={() => console.log()}
+   
     />
       <Legend iconSize={30} width={300} height={140} layout='vertical' verticalAlign='top' align="right"/>
-      <Tooltip content={renderTooltip} />
-</RadialBarChart>
+      <Tooltip content={<CustomTooltip />} />
+  </RadialBarChart>
       <BarChart
         layout="vertical"
         width={800}
