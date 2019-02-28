@@ -70,10 +70,6 @@ function App() {
       <h1>Minor League Connector </h1>
     </Grid.Column>
   </Grid.Row>
-  
- 
-  <div>
-
       <ClassPicker 
         years={years}
         classes={classes} 
@@ -83,16 +79,8 @@ function App() {
         setSelectedYear={setSelectedYear}
         setSelectedClass={setSelectedClass}
         />
-
-     </div>
- 
-
   <Grid.Row>
-   <div>
-    <Grid.Column width={4}>   
-    </Grid.Column>
-    <Grid.Column width={10}>
-      
+    <Grid.Column width={10}>    
       <YearPicker 
         years={years} 
         classes={classes} 
@@ -103,21 +91,24 @@ function App() {
         setSelectedYear={setSelectedYear} 
         />   
     </Grid.Column>
-    </div>
+  
    </Grid.Row>
    <Grid.Row>
-   <Grid.Column width={8}>
+   <Grid.Column width={4}>
   {selectedClass.name}
    </Grid.Column>
-   <Grid.Column width={8}>
+   <Grid.Column width={4}>
    {selectedYear}
    </Grid.Column>
    </Grid.Row>
    <Grid.Row>
-     <Grid.Column >
+     <Grid.Column width={4}>
+     <div style={{marginTop: '8vh', height:"50vh", overflow: 'scroll'}}>
        <TeamList {...bestMinors} allMLB={allMLB} />
+     </div>
      </Grid.Column>
-     <Grid.Column >
+     <Grid.Column width={12}>
+     <div style={{marginLeft: -40, marginRight: -80, marginTop: -40}}>
          <MainChart 
          {...bestMinors} 
          allMLB={allMLB} 
@@ -125,6 +116,7 @@ function App() {
          selectedYear={selectedYear} 
          getBestMinors={getBestMinors}
          />
+         </div>
      </Grid.Column>
   </Grid.Row>
 </Grid>

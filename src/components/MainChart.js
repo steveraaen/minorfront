@@ -37,23 +37,22 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 } 
     return (
-    	<div >
+    <div style={{paddingTop: -20}}>	
       <RadialBarChart 
-        width={800} 
-        height={800} 
+        width={1600} 
+        height={1600} 
         innerRadius="10%" 
         outerRadius="80%" 
         data={radData} 
-        startAngle={180} 
-        endAngle={0}
-        barGap={8}
-        marginLeft={-10}
+        startAngle={270} 
+        endAngle={90}
+
 
 >
   <RadialBar 
     fill="color" 
     minAngle={15} 
-    label={{ fill: 'black', position: 'end' }} 
+    label={{ fill: 'black', position: 'end', fontSize: '16pt' }} 
     background 
     clockWise={true} 
     dataKey='value' 
@@ -61,7 +60,7 @@ const CustomTooltip = ({ active, payload, label }) => {
     />
       <Tooltip  content={<CustomTooltip />} />
   </RadialBarChart>
-      </div>
+  </div>     
     );
   }
 

@@ -6,3 +6,6 @@ body {
   height: 30vh;
   overflow: scroll;
 }
+.recharts-wrapper {
+	padding-top: -20;
+}

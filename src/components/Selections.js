@@ -129,7 +129,7 @@ function TeamList(props) {
     }
     return(
     <List.Item key = {idx}>
-      <Image avatar src={tm.franchiseLogo} />
+      <Image src={tm.franchiseLogo} width={63} height={35} />
       <List.Content>
         <List.Header as='a'>{tm.team}</List.Header>
         <List.Description>
@@ -138,6 +138,7 @@ function TeamList(props) {
           </a>{' major league players'}
         </List.Description>
       </List.Content>
+      <Image src={tm.logo} width={63} height={35} />
     </List.Item>
       )
   })
