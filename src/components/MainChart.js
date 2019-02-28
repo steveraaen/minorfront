@@ -7,12 +7,12 @@ import { Button, Image, Popup } from 'semantic-ui-react'
 function MainChart(props) {
 const CustomTooltip = ({ active, payload, label }) => {
   if (active) {
-  console.log(payload)
+  console.log(payload[0].payload)
     return (
       <div className="custom-tooltip">
       
         <p className="label">{`${label} : ${payload[0].value}`}</p>
-        <p className="desc">Anything you want can be displayed here.</p>
+        <p><img src={payload[0].payload.logo} /></p>
       </div>
     );
   }
