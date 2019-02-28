@@ -9,10 +9,10 @@ const CustomTooltip = ({ active, payload, label }) => {
   if (active) {
   console.log(payload[0].payload)
     return (
-      <div className="custom-tooltip">
-      
-        <p className="label">{`${label} : ${payload[0].value}`}</p>
-        <p><img src={payload[0].payload.logo} /></p>
+      <div className="custom-tooltip" style={{width: 400, height: 400, color: 'white', backgroundColor:payload[0].payload.fill}}>      
+        <p className="label">{payload[0].payload.value}</p>
+        <p className="label">{payload[0].payload.name}</p>
+        <p><Image circular src={payload[0].payload.logo} /></p>
       </div>
     );
   }
@@ -57,7 +57,7 @@ const CustomTooltip = ({ active, payload, label }) => {
    
     />
       <Legend iconSize={30} width={300} height={140} layout='vertical' verticalAlign='top' align="right"/>
-      <Tooltip content={<CustomTooltip />} />
+      <Tooltip  content={<CustomTooltip />} />
   </RadialBarChart>
       <BarChart
         layout="vertical"
