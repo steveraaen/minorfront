@@ -1,51 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Grid,Header, Icon, Image, Menu, Segment, Sidebar, Table } from 'semantic-ui-react'
+import { Button, Grid,Header, Icon, Image, List, Menu, Segment, Sidebar, Table } from 'semantic-ui-react'
 import '../App.css'
 
 function YearPicker(props) {
-  function handleClick(c, r, y) {
-    console.log(typeof y)  
-      props.getBestMinors(c, r, y) 
+
+  function handleClick(c, r, y, n) {
+    console.log(c)  
+      props.getBestMinors(c, r, y, n) 
+      props.setSelectedYear(y)
+      props.setSelectedClass(n)
 }
   return(
-    <div>
+    <span >Select Year
         <Button.Group>
         { props.years.map((yr, idx) => {
           return(
-             <Button key={idx} onClick={() => handleClick(props.selectedClass.code, props.selectedClass.regex, yr.value)}>{yr.text}</Button>
+             <Button 
+               basic color='teal'
+               key={idx} 
+               onClick={() => handleClick(props.selectedClass.code, props.selectedClass.regex, yr.value, props.selectedClass)}>{yr.text}</Button>
             )
         })        
-        }
+       }
         </Button.Group>
-  </div>
+  </span>
     )
 }
 
 function ClassPicker(props) {
-  function handleClick(c, r, y) {
-    console.log()  
-      props.getBestMinors(c, r, y) 
+  function handleClick(c, r, y, n) {   
+      props.getBestMinors(c, r, y, n) 
+      props.setSelectedYear(y)
+      props.setSelectedClass(n)
 }
-/*  var mappedClasses = props.classes.map((tm, idx) => {
-    var semanticClasses = {
-        text: tm.name,
-        value: tm.regex,
-        key: tm.code
-      }
-    return semanticClasses
-  }) */ 
-
     return (
-    <div>
+<Grid.Row>
+    <Grid.Column width={3}>
+      Select Minor League Class
+    </Grid.Column>  
+    <Grid.Column width={13}>  
         <Button.Group>
         { props.classes.map((cl, idx) => {
           return(
-             <Button basic color='teal' key={cl.regex} onClick={() => handleClick(cl.code, cl.regex, props.selectedYear)}>{cl.name}</Button>
+             <Button 
+             basic color='teal' 
+             key={cl.regex} 
+             onClick={() => handleClick(cl.code, cl.regex, props.selectedYear, cl)}>{cl.name}</Button>
             )
         })         
         }
         </Button.Group>
-  </div>
+     </Grid.Column>
+  </Grid.Row>
     );
 }
 function MLBMaster(props) {
@@ -89,16 +95,14 @@ function MLBMaster(props) {
 )
 }
 function MinorTeamPicker (props) {
-  function handleClick(c, r, y) {
-  
+  function handleClick(c, r, y) { 
       props.getBestMinors(c, r, y) 
 }
   return(
     <div>       
         { props.allMiLB.map((tm, idx) => {
           return(
-             <div key={idx} style={{fontSize: 20, fontWeight:600}}>
-             
+             <div key={idx} style={{fontSize: 20, fontWeight:600}}>             
              <Image 
              width={80}
                src={tm.logo} 
@@ -113,8 +117,38 @@ function MinorTeamPicker (props) {
   </div>
     )
 }
+function TeamList(props) {
+  console.log(props)
+  if(props.bestMinors) {
+  var listArray = props.bestMinors.map((tm, idx) => {
+    
+    for(let i = 0; i < props.allMLB.length; i++) {
+      if(tm.franchise === props.allMLB[i].teamCode){
+        tm.franchiseLogo= props.allMLB[i].picUrl
+      }
+    }
+    return(
+    <List.Item key = {idx}>
+      <Image avatar src={tm.franchiseLogo} />
+      <List.Content>
+        <List.Header as='a'>{tm.team}</List.Header>
+        <List.Description>
+          <a>
+            <b>{tm.playerCount}</b>
+          </a>{' major league players'}
+        </List.Description>
+      </List.Content>
+    </List.Item>
+      )
+  })
+}
 
-export { MLBMaster, ClassPicker, MinorTeamPicker, YearPicker} ;
+  return(
+    <List size="massive" >{listArray}</List>
+    )
+
+}
+export { MLBMaster, ClassPicker, MinorTeamPicker, TeamList, YearPicker} ;
 
 
 

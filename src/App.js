@@ -2,12 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Button } from 'semantic-ui-react'
 
 import axios from 'axios'
-import { ClassPicker, MinorTeamPicker, MLBMaster, YearPicker } from './components/Selections.js'
-/*import ClassPicker from './components/ClassPicker'
-import LeagueList from './components/LeagueList'
-import MLBMaster from './components/MLBMaster'*/
+import { ClassPicker, MinorTeamPicker, MLBMaster, TeamList, YearPicker } from './components/Selections.js'
 import MainChart from './components/MainChart'
-import FormA from './components/Form'
+
 import './App.css'
 import classes from './classes.js'
 import mlbTeams from './mlbTeams.js'
@@ -33,7 +30,7 @@ function App() {
     const [years, setYears] = useState(yrs);
     const [bestMinors, setBestMinors] = useState();
     const [allMLB] = useState(mlbTeams);
-    const [selectedYear, useSelectedYear] = useState(2013);
+    const [selectedYear, setSelectedYear] = useState(2013);
 
     async function getMinors() {
         await axios.get('/api/allMinors')
@@ -48,10 +45,10 @@ function App() {
                 return null;
             });
     }
-    async function getBestMinors(p, m, y) {
+
+     async function getBestMinors(p, m, y) {
         await axios.get('/api/bestMinors', { params: { p, m, y } })
             .then(res => {
-               
                 setBestMinors({
                     bestMinors: res.data
                 })
@@ -74,38 +71,63 @@ function App() {
     </Grid.Column>
   </Grid.Row>
   
-  <Grid.Row>
+ 
   <div>
-    <Grid.Column width={4}>    
-       Select Minor League Class
-    <Grid.Column width={10}>
-      <ClassPicker classes={classes} getBestMinors={getBestMinors} selectedYear={selectedYear}/>
-    </Grid.Column>   
-    </Grid.Column>
+
+      <ClassPicker 
+        years={years}
+        classes={classes} 
+        getBestMinors={getBestMinors} 
+        selectedClass={selectedClass} 
+        selectedYear={selectedYear} 
+        setSelectedYear={setSelectedYear}
+        setSelectedClass={setSelectedClass}
+        />
+
      </div>
-  </Grid.Row>
+ 
 
   <Grid.Row>
    <div>
     <Grid.Column width={4}>   
     </Grid.Column>
     <Grid.Column width={10}>
-      Select Year
-      <YearPicker years={years} classes={classes} selectedClass={selectedClass} getBestMinors={getBestMinors} selectedYear={selectedYear}/>   
+      
+      <YearPicker 
+        years={years} 
+        classes={classes} 
+        getBestMinors={getBestMinors} 
+        selectedClass={selectedClass} 
+        setSelectedClass={setSelectedClass} 
+        selectedYear={selectedYear} 
+        setSelectedYear={setSelectedYear} 
+        />   
     </Grid.Column>
     </div>
    </Grid.Row>
-
-
    <Grid.Row>
-     <Grid.Column width={8}>
-         <MainChart {...bestMinors} allMLB={allMLB}/>
+   <Grid.Column width={8}>
+  {selectedClass.name}
+   </Grid.Column>
+   <Grid.Column width={8}>
+   {selectedYear}
+   </Grid.Column>
+   </Grid.Row>
+   <Grid.Row>
+     <Grid.Column >
+       <TeamList {...bestMinors} allMLB={allMLB} />
+     </Grid.Column>
+     <Grid.Column >
+         <MainChart 
+         {...bestMinors} 
+         allMLB={allMLB} 
+         selectedClass={selectedClass}
+         selectedYear={selectedYear} 
+         getBestMinors={getBestMinors}
+         />
      </Grid.Column>
   </Grid.Row>
 </Grid>
-
-
-
     );
 }
 
