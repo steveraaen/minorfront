@@ -11,7 +11,11 @@ function YearPicker(props) {
       props.setSelectedClass(n)
 }
   return(
-    <span >Select Year
+    <Grid.Row>
+      <Grid.Column width={3}>
+      Select Year
+     </Grid.Column>  
+    <Grid.Column width={13}>  
         <Button.Group>
         { props.years.map((yr, idx) => {
           return(
@@ -23,7 +27,8 @@ function YearPicker(props) {
         })        
        }
         </Button.Group>
-  </span>
+       </Grid.Column>
+  </Grid.Row>
     )
 }
 
@@ -128,12 +133,12 @@ function TeamList(props) {
       }
     }
     return(
-    <List.Item key = {idx}>
+    <List.Item onClick={() => props.getPlayerList(props.selectedClass.regex, tm.franchise, tm.yr)} key = {idx}>
       <Image src={tm.franchiseLogo} width={63} height={35} />
       <List.Content>
         <List.Header as='a'>{tm.team}</List.Header>
         <List.Description>
-          <a>
+          <a >
             <b>{tm.playerCount}</b>
           </a>{' major league players'}
         </List.Description>
@@ -145,7 +150,7 @@ function TeamList(props) {
 }
 
   return(
-    <List size="massive" >{listArray}</List>
+    <List size="massive" ordered>{listArray}</List>
     )
 
 }

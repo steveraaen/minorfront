@@ -31,6 +31,7 @@ function App() {
     const [bestMinors, setBestMinors] = useState();
     const [allMLB] = useState(mlbTeams);
     const [selectedYear, setSelectedYear] = useState(2013);
+    const [playerList, setPlayerList] = useState();
 
     async function getMinors() {
         await axios.get('/api/allMinors')
@@ -51,6 +52,18 @@ function App() {
             .then(res => {
                 setBestMinors({
                     bestMinors: res.data
+                })
+            })
+            .catch(err => {
+                console.log(err);
+                return null;
+            });
+    }
+         async function getPlayerList(r, f, y) {
+        await axios.get('/api/playerList', { params: { r, f, y } })
+            .then(res => {
+                setPlayerList({
+                    playerList: res.data
                 })
             })
             .catch(err => {
@@ -80,7 +93,7 @@ function App() {
         setSelectedClass={setSelectedClass}
         />
   <Grid.Row>
-    <Grid.Column width={10}>    
+       <Grid.Column width={16}>
       <YearPicker 
         years={years} 
         classes={classes} 
@@ -90,8 +103,8 @@ function App() {
         selectedYear={selectedYear} 
         setSelectedYear={setSelectedYear} 
         />   
-    </Grid.Column>
   
+    </Grid.Column>
    </Grid.Row>
    <Grid.Row>
    <Grid.Column width={4}>
@@ -103,8 +116,8 @@ function App() {
    </Grid.Row>
    <Grid.Row>
      <Grid.Column width={4}>
-     <div style={{marginTop: '8vh', height:"50vh", overflow: 'scroll'}}>
-       <TeamList {...bestMinors} allMLB={allMLB} />
+     <div style={{marginTop: '8vh', height:"60vh", overflow: 'scroll'}}>
+       <TeamList {...bestMinors} allMLB={allMLB} selectedYear={selectedYear} selectedClass={selectedClass} playerList={playerList} getPlayerList={getPlayerList} />
      </div>
      </Grid.Column>
      <Grid.Column width={12}>
