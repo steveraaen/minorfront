@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Button } from 'semantic-ui-react'
 
 import axios from 'axios'
-import { ClassPicker, MinorTeamPicker, MLBMaster, TeamList, YearPicker } from './components/Selections.js'
+import { ClassPicker, MinorTeamPicker, MLBMaster, Players, TeamList, YearPicker } from './components/Selections.js'
 import MainChart from './components/MainChart'
 
 import './App.css'
@@ -129,6 +129,9 @@ function App() {
          selectedYear={selectedYear} 
          getBestMinors={getBestMinors}
          />
+         </div>
+         <div>
+           <Players {...playerList} /> 
          </div>
      </Grid.Column>
   </Grid.Row>

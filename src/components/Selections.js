@@ -148,13 +148,42 @@ function TeamList(props) {
       )
   })
 }
-
   return(
     <List size="massive" ordered>{listArray}</List>
     )
-
 }
-export { MLBMaster, ClassPicker, MinorTeamPicker, TeamList, YearPicker} ;
+
+function Players(props) {
+  if(props.playerList) {
+  return(
+    <div style={{maxWidth: 20}}>
+      <Table>
+      <Table.Header>
+        <Table.Row>         
+          <Table.HeaderCell>League</Table.HeaderCell>          
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+      {props.playerList.map((pl, idx) => {
+        return(
+        <Table.Row key={idx}>
+          <Table.Cell>{pl.playerName}</Table.Cell>
+          <Table.Cell>{pl.teamID}</Table.Cell>
+          <Table.Cell>{pl.AB}</Table.Cell>
+          <Table.Cell>{pl.AVG}</Table.Cell>
+        </Table.Row>
+        )
+        })
+        }
+      </Table.Body>
+
+    </Table>
+  </div>
+    )}
+  else {return (<div>.</div>)}
+}
+
+export { MLBMaster, ClassPicker, MinorTeamPicker, Players, TeamList, YearPicker} ;
 
 
 
