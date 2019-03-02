@@ -39,8 +39,8 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
     <div style={{paddingTop: -20}}>	
       <RadialBarChart 
-        width={1600} 
-        height={1600} 
+        width={800} 
+        height={800} 
         innerRadius="10%" 
         outerRadius="80%" 
         data={radData} 

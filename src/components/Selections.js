@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Grid,Header, Icon, Image, List, Menu, Segment, Sidebar, Table } from 'semantic-ui-react'
+import { Button,  Image, List,  Table } from 'semantic-ui-react'
 import '../App.css'
 
 function YearPicker(props) {
-
   function handleClick(c, r, y, n) {
     console.log(c)  
       props.getBestMinors(c, r, y, n) 
@@ -11,11 +10,11 @@ function YearPicker(props) {
       props.setSelectedClass(n)
 }
   return(
-    <Grid.Row>
-      <Grid.Column width={3}>
+    <div>
+      <div width={3}>
       Select Year
-     </Grid.Column>  
-    <Grid.Column width={13}>  
+     </div>  
+    <div width={13}>  
         <Button.Group>
         { props.years.map((yr, idx) => {
           return(
@@ -27,11 +26,10 @@ function YearPicker(props) {
         })        
        }
         </Button.Group>
-       </Grid.Column>
-  </Grid.Row>
+       </div>
+  </div>
     )
 }
-
 function ClassPicker(props) {
   function handleClick(c, r, y, n) {   
       props.getBestMinors(c, r, y, n) 
@@ -39,11 +37,11 @@ function ClassPicker(props) {
       props.setSelectedClass(n)
 }
     return (
-<Grid.Row>
-    <Grid.Column width={3}>
+<div>
+    <div>
       Select Minor League Class
-    </Grid.Column>  
-    <Grid.Column width={13}>  
+    </div>  
+    <div>  
         <Button.Group>
         { props.classes.map((cl, idx) => {
           return(
@@ -55,50 +53,11 @@ function ClassPicker(props) {
         })         
         }
         </Button.Group>
-     </Grid.Column>
-  </Grid.Row>
+     </div>
+  </div>
     );
 }
-function MLBMaster(props) {
-    var mappedMLB = props.allMLB.map((tm, idx) => {
-    var semanticMLB = {
-        text: tm.teamName,
-        value: tm.teamCode,
-        image: tm.picUrl,
-        league: tm.league,
-        key: tm.teamCode
-      }
-    return semanticMLB
-  })
-  return(
-    <div style={{maxWidth: 20}}>
-      <Table>
-      <Table.Header>
-        <Table.Row>
-         
-          <Table.HeaderCell>League</Table.HeaderCell>
-          
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-      {props.allMLB.map((tm, idx) => {
-        return(
-        <Table.Row key={idx}>
-          <Table.Cell>
-           
-          </Table.Cell>
-          <Table.Cell>{tm.teamName}</Table.Cell>
-          <Table.Cell><Image src={tm.picUrl} size="tiny" circular/></Table.Cell>
-        </Table.Row>
-        )
-        })
-        }
-      </Table.Body>
 
-    </Table>
-  </div>
-)
-}
 function MinorTeamPicker (props) {
   function handleClick(c, r, y) { 
       props.getBestMinors(c, r, y) 
@@ -183,7 +142,7 @@ function Players(props) {
   else {return (<div>.</div>)}
 }
 
-export { MLBMaster, ClassPicker, MinorTeamPicker, Players, TeamList, YearPicker} ;
+export { ClassPicker, MinorTeamPicker, Players, TeamList, YearPicker} ;
 
 
 

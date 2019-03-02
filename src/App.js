@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Button } from 'semantic-ui-react'
-
+import { div, Button } from 'semantic-ui-react'
 import axios from 'axios'
+import Collapsible from 'react-collapsible';
 import { ClassPicker, MinorTeamPicker, MLBMaster, Players, TeamList, YearPicker } from './components/Selections.js'
 import MainChart from './components/MainChart'
 
@@ -21,9 +21,7 @@ const yrs = [
     { text: "2018", value: 2018, key: "2018" }
 ]
 
-
 function App() {
-
     const [allMiLB, setAllMiLB] = useState(allMinorTeams);
     const [selectedClass, setSelectedClass] = useState(classes[0]);
     const [minors, setMinors] = useState({});
@@ -47,7 +45,7 @@ function App() {
             });
     }
 
-     async function getBestMinors(p, m, y) {
+    async function getBestMinors(p, m, y) {
         await axios.get('/api/bestMinors', { params: { p, m, y } })
             .then(res => {
                 setBestMinors({
@@ -59,7 +57,7 @@ function App() {
                 return null;
             });
     }
-         async function getPlayerList(r, f, y) {
+    async function getPlayerList(r, f, y) {
         await axios.get('/api/playerList', { params: { r, f, y } })
             .then(res => {
                 setPlayerList({
@@ -71,18 +69,14 @@ function App() {
                 return null;
             });
     }
-
     useEffect(() => {
         getMinors()
     }, {});
     return (
-
-<Grid>
-  <Grid.Row>
-    <Grid.Column width={16}>
+<div>
       <h1>Minor League Connector </h1>
-    </Grid.Column>
-  </Grid.Row>
+
+
       <ClassPicker 
         years={years}
         classes={classes} 
@@ -91,9 +85,7 @@ function App() {
         selectedYear={selectedYear} 
         setSelectedYear={setSelectedYear}
         setSelectedClass={setSelectedClass}
-        />
-  <Grid.Row>
-       <Grid.Column width={16}>
+        />      
       <YearPicker 
         years={years} 
         classes={classes} 
@@ -102,40 +94,28 @@ function App() {
         setSelectedClass={setSelectedClass} 
         selectedYear={selectedYear} 
         setSelectedYear={setSelectedYear} 
-        />   
-  
-    </Grid.Column>
-   </Grid.Row>
-   <Grid.Row>
-   <Grid.Column width={4}>
+        />     
+
   {selectedClass.name}
-   </Grid.Column>
-   <Grid.Column width={4}>
+
    {selectedYear}
-   </Grid.Column>
-   </Grid.Row>
-   <Grid.Row>
-     <Grid.Column width={4}>
-     <div style={{marginTop: '8vh', height:"60vh", overflow: 'scroll'}}>
+
+
+     <div style={{marginTop: '8vh', height:"50vh", overflow: 'scroll'}}>
        <TeamList {...bestMinors} allMLB={allMLB} selectedYear={selectedYear} selectedClass={selectedClass} playerList={playerList} getPlayerList={getPlayerList} />
      </div>
-     </Grid.Column>
-     <Grid.Column width={12}>
-     <div style={{marginLeft: -40, marginRight: -80, marginTop: -40}}>
-         <MainChart 
+
+       <MainChart 
          {...bestMinors} 
          allMLB={allMLB} 
          selectedClass={selectedClass}
          selectedYear={selectedYear} 
          getBestMinors={getBestMinors}
          />
-         </div>
-         <div>
+         <div >
            <Players {...playerList} /> 
          </div>
-     </Grid.Column>
-  </Grid.Row>
-</Grid>
+</div>
     );
 }
 
