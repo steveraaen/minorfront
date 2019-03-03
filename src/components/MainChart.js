@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AreaChart, BarChart, Label, Legend, Bar, Area, XAxis, YAxis, CartesianGrid, RadialBar, RadialBarChart, Tooltip } from 'recharts';
-import { Button, Image, Popup } from 'semantic-ui-react'
+import { Button, Image, Modal } from 'semantic-ui-react'
 import '../App.css'
 
 
@@ -36,23 +36,23 @@ const CustomTooltip = ({ active, payload, label }) => {
   })
 
 } 
+var labelPos =["top","left","right","bottom","inside","outside","insideLeft","insideRight","insideTop","insideBottom","insideTopLeft","insideBottomLeft","insideTopRight","insideBottomRight","insideStart","insideEnd","end","center","centerTop","centerBottom"]
     return (
-    <div style={{paddingTop: -20}}>	
+
+    <div>	
       <RadialBarChart 
-        width={800} 
-        height={800} 
+        width={1000} 
+        height={1000} 
         innerRadius="10%" 
         outerRadius="80%" 
         data={radData} 
-        startAngle={270} 
-        endAngle={90}
-
-
+        startAngle={0} 
+        endAngle={300}
 >
   <RadialBar 
     fill="color" 
     minAngle={15} 
-    label={{ fill: 'black', position: 'end', fontSize: '16pt' }} 
+    label={{ fill: 'black', position: 'right', fontSize: '16pt' }} 
     background 
     clockWise={true} 
     dataKey='value' 
@@ -60,8 +60,15 @@ const CustomTooltip = ({ active, payload, label }) => {
     />
       <Tooltip  content={<CustomTooltip />} />
   </RadialBarChart>
-  </div>     
+  </div>  
+
     );
   }
 
 export default MainChart
+
+
+
+
+
+

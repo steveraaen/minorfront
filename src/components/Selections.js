@@ -10,11 +10,8 @@ function YearPicker(props) {
       props.setSelectedClass(n)
 }
   return(
-    <div>
-      <div width={3}>
-      Select Year
-     </div>  
-    <div width={13}>  
+ 
+    <div>  
         <Button.Group>
         { props.years.map((yr, idx) => {
           return(
@@ -27,7 +24,7 @@ function YearPicker(props) {
        }
         </Button.Group>
        </div>
-  </div>
+
     )
 }
 function ClassPicker(props) {
@@ -36,11 +33,7 @@ function ClassPicker(props) {
       props.setSelectedYear(y)
       props.setSelectedClass(n)
 }
-    return (
-<div>
-    <div>
-      Select Minor League Class
-    </div>  
+    return ( 
     <div>  
         <Button.Group>
         { props.classes.map((cl, idx) => {
@@ -54,10 +47,8 @@ function ClassPicker(props) {
         }
         </Button.Group>
      </div>
-  </div>
     );
 }
-
 function MinorTeamPicker (props) {
   function handleClick(c, r, y) { 
       props.getBestMinors(c, r, y) 
@@ -82,44 +73,52 @@ function MinorTeamPicker (props) {
     )
 }
 function TeamList(props) {
-  console.log(props)
+
   if(props.bestMinors) {
-  var listArray = props.bestMinors.map((tm, idx) => {
-    
+    return(
+      <Table style={{backgroundColor: 'rgba(0,0,0,0)'}}>
+      <Table.Header>
+        <Table.Row>         
+          <Table.HeaderCell></Table.HeaderCell>          
+          <Table.HeaderCell>Team</Table.HeaderCell>          
+          <Table.HeaderCell>MLB Players</Table.HeaderCell>          
+          <Table.HeaderCell>Franchise</Table.HeaderCell>          
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+      {props.bestMinors.map((tm, idx) => {   
     for(let i = 0; i < props.allMLB.length; i++) {
       if(tm.franchise === props.allMLB[i].teamCode){
         tm.franchiseLogo= props.allMLB[i].picUrl
       }
     }
     return(
-    <List.Item onClick={() => props.getPlayerList(props.selectedClass.regex, tm.franchise, tm.yr)} key = {idx}>
-      <Image src={tm.franchiseLogo} width={63} height={35} />
-      <List.Content>
-        <List.Header as='a'>{tm.team}</List.Header>
-        <List.Description>
-          <a >
-            <b>{tm.playerCount}</b>
-          </a>{' major league players'}
-        </List.Description>
-      </List.Content>
-      <Image src={tm.logo} width={63} height={35} />
-    </List.Item>
+    <Table.Row onClick={() => props.getPlayerList(props.selectedClass.regex, tm.franchise, tm.yr)} key = {idx}>
+          <Table.Cell><img width="80px" height="80px"  src={tm.logo} /></Table.Cell>
+          <Table.Cell>{tm.team}</Table.Cell>
+          <Table.Cell>{tm.playerCount}</Table.Cell>
+          <Table.Cell><img width="80px" height="60px" src={tm.franchiseLogo} /></Table.Cell>
+    </Table.Row>
       )
-  })
-}
-  return(
-    <List size="massive" ordered>{listArray}</List>
-    )
+  })}
+      </Table.Body>
+      </Table>
+      )
+} else {return(<div>.</div>)}
+
 }
 
 function Players(props) {
   if(props.playerList) {
   return(
-    <div style={{maxWidth: 20}}>
-      <Table>
+    <div>
+      <Table style={{backgroundColor: 'rgba(0,0,0,0)'}}>
       <Table.Header>
         <Table.Row>         
-          <Table.HeaderCell>League</Table.HeaderCell>          
+          <Table.HeaderCell>Player</Table.HeaderCell>          
+          <Table.HeaderCell>Team</Table.HeaderCell>          
+          <Table.HeaderCell>At Bats</Table.HeaderCell>          
+          <Table.HeaderCell>Average</Table.HeaderCell>          
         </Table.Row>
       </Table.Header>
       <Table.Body>

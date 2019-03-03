@@ -74,47 +74,54 @@ function App() {
     }, {});
     return (
 <div>
-      <h1>Minor League Connector </h1>
+  <h1>Home Town Fantasy</h1>
+    <Collapsible trigger="Select Minor League Class">
+    <ClassPicker 
+      years={years}
+      classes={classes} 
+      getBestMinors={getBestMinors} 
+      selectedClass={selectedClass} 
+      selectedYear={selectedYear} 
+      setSelectedYear={setSelectedYear}
+      setSelectedClass={setSelectedClass}
+      /> 
+      </Collapsible> 
+    <Collapsible trigger="Select Year">    
+    <YearPicker 
+      years={years} 
+      classes={classes} 
+      getBestMinors={getBestMinors} 
+      selectedClass={selectedClass} 
+      setSelectedClass={setSelectedClass} 
+      selectedYear={selectedYear} 
+      setSelectedYear={setSelectedYear} 
+      />     
+      </Collapsible> 
+        {selectedClass.name}
 
+        {selectedYear}
+   <div style={{display: 'flex', flexDirection: 'row'}}>
+   <div style={{ height:"50vh", overflow: 'scroll'}}>
+     <TeamList {...bestMinors} allMLB={allMLB} selectedYear={selectedYear} selectedClass={selectedClass} playerList={playerList} getPlayerList={getPlayerList} />
+   </div>
+   <div style={{ height:"50vh", overflow: 'scroll'}}>
 
-      <ClassPicker 
-        years={years}
-        classes={classes} 
-        getBestMinors={getBestMinors} 
-        selectedClass={selectedClass} 
-        selectedYear={selectedYear} 
-        setSelectedYear={setSelectedYear}
-        setSelectedClass={setSelectedClass}
-        />      
-      <YearPicker 
-        years={years} 
-        classes={classes} 
-        getBestMinors={getBestMinors} 
-        selectedClass={selectedClass} 
-        setSelectedClass={setSelectedClass} 
-        selectedYear={selectedYear} 
-        setSelectedYear={setSelectedYear} 
-        />     
-
-  {selectedClass.name}
-
-   {selectedYear}
-
-
-     <div style={{marginTop: '8vh', height:"50vh", overflow: 'scroll'}}>
-       <TeamList {...bestMinors} allMLB={allMLB} selectedYear={selectedYear} selectedClass={selectedClass} playerList={playerList} getPlayerList={getPlayerList} />
+ <Players {...playerList} /> 
      </div>
+      <MainChart 
+       {...bestMinors} 
+       allMLB={allMLB} 
+       selectedClass={selectedClass}
+       selectedYear={selectedYear} 
+       getBestMinors={getBestMinors}
+       />
+     </div>
+    
 
-       <MainChart 
-         {...bestMinors} 
-         allMLB={allMLB} 
-         selectedClass={selectedClass}
-         selectedYear={selectedYear} 
-         getBestMinors={getBestMinors}
-         />
-         <div >
-           <Players {...playerList} /> 
-         </div>
+     
+     <div>
+        
+       </div>
 </div>
     );
 }
