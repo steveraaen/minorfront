@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { div, Button, Icon } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 import axios from 'axios'
 import Collapsible from 'react-collapsible';
-import { ClassPicker, MinorTeamPicker, MLBMaster, Players, TeamList, YearPicker } from './components/Selections.js'
+import { ClassPicker, Players, TeamList, YearPicker, Divisions } from './components/Selections.js'
 import MainChart from './components/MainChart'
 
 import './App.css'
 import classes from './classes.js'
 import mlbTeams from './mlbTeams.js'
 import leagues from './assets/leagues.js'
-import allMinorTeams from './assets/allMinorTeams.js'
 
-console.log(leagues)
 const yrs = [
     { text: "2013", value: 2013, key: "2013" },
     { text: "2014", value: 2014, key: "2014" },
@@ -22,17 +20,43 @@ const yrs = [
 ]
 
 function App() {
-    const [allMiLB, setAllMiLB] = useState(allMinorTeams);
+   /* const [allMiLB, setAllMiLB] = useState(allMinorTeams);*/
     const [selectedClass, setSelectedClass] = useState(classes[0]);
-    const [minors, setMinors] = useState({});
-    const [years, setYears] = useState(yrs);
+/*    const [minors, setMinors] = useState({});*/
+    const [years] = useState(yrs);
     const [bestMinors, setBestMinors] = useState();
     const [allMLB] = useState(mlbTeams);
     const [selectedYear, setSelectedYear] = useState(2013);
     const [playerList, setPlayerList] = useState();
-    const [classIcon, setClassIcon] = useState('angle down');
+    const [classIcon] = useState('angle down');
+    const [divisions, setDivisions] = useState();
 
-    async function getMinors() {
+    function multiSelect(cl) {
+     var classSelections=[] 
+ !classSelections.includes(cl) ? classSelections.push(cl) : classSelections.slice(classSelections.indexOf(cl)) 
+      
+    
+      console.log(classSelections)
+    }
+
+    function makeDivs() {
+      const tempDivisions = []
+/*      for(let i = 0; i < allMLB.length; i++) {
+        let dvsn = {}
+        dvsn.league = allMLB[i].league
+        dvsn.color = allMLB[i].color
+        tempDivisions.push(dvsn)
+        }*/
+  var uniqueDivisions = allMLB.filter((thing, index, self) =>
+  index === self.findIndex((t) => (
+    t.league === thing.league && t.color === thing.color
+  ))
+)
+  return setDivisions({divisions: uniqueDivisions})
+    }
+
+
+/*    async function getMinors() {
         await axios.get('/api/allMinors')
             .then(res => {
                 console.log(res)
@@ -44,8 +68,9 @@ function App() {
                 console.log(err);
                 return null;
             });
-    }
+    }*/
     async function getBestMinors(p, m, y) {
+      console.log(p,m,y)
         await axios.get('/api/bestMinors', { params: { p, m, y } })
             .then(res => {
                 setBestMinors({
@@ -70,13 +95,19 @@ function App() {
             });
     }
 
-    useEffect(() => {
+/*    useEffect(() => {
         getMinors()
+    }, {});*/
+    useEffect(() => {
+        makeDivs()
     }, {});
- 
+    useEffect(() => {
+        getBestMinors(selectedClass.code, selectedClass.regex, selectedYear)
+    }, {});
+ console.log(selectedClass)
     return (
 <div>
-  <h1>Home Town Fantasy</h1>
+  <span>Home town fantasy</span>
     <Collapsible 
       trigger={<div>Select Minor League Class  <Icon name={classIcon} /></div>} 
       triggerStyle={{fontSize: 36, padding: 6, margin: 6, borderWidth: 4, borderColor: 'green', borderStyle: 'line'}}
@@ -106,11 +137,13 @@ function App() {
       setSelectedYear={setSelectedYear} 
       />     
       </Collapsible> 
-      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap'}}>
+
+      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap', width: '30vw'}}>
         <div style={{fontSize: 36, fontWeight: 600}}>{selectedClass.name}</div>
 
         <div style={{fontSize: 36, fontWeight: 600}}>{selectedYear}</div>
       </div>
+      <Divisions multiSelect={multiSelect} allMLB={allMLB} {...divisions}/>
    <div style={{display: 'flex', flexDirection: 'row'}}>
       <MainChart 
        {...bestMinors} 

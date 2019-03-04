@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Button,  Image, List,  Table } from 'semantic-ui-react'
+import React from 'react';
+import { Button, Checkbox, Image,  Loader, Table } from 'semantic-ui-react'
 import '../App.css'
 
 function YearPicker(props) {
@@ -72,8 +72,32 @@ function MinorTeamPicker (props) {
   </div>
     )
 }
-function TeamList(props) {
+function Divisions(props) {
 
+  if(props.divisions) {
+  return(
+    <div style={{width: "20vw"}}>
+      {props.divisions.map((dvn, idx)=> {
+        return(
+        <div key={idx} style={{backgroundColor: dvn.color}}>
+          <Checkbox
+          toggle
+          label={dvn.display}
+          onClick={() => props.multiSelect(dvn.league)}
+
+          >
+        
+          </Checkbox>
+</div>
+          )
+      })
+    }
+    </div>
+    )
+  } else {return <Loader active />}
+ }
+
+function TeamList(props) {
   if(props.bestMinors) {
     return(
       <div style={{ height:"50vh", overflow: 'scroll'}}>
@@ -95,10 +119,10 @@ function TeamList(props) {
     }
     return(
     <Table.Row onClick={() => props.getPlayerList(props.selectedClass.regex, tm.franchise, tm.yr)} key = {idx}>
-          <Table.Cell><img width="80px" height="80px"  src={tm.logo} /></Table.Cell>
+          <Table.Cell><img alt="team logo" width="80px" height="80px"  src={tm.logo} /></Table.Cell>
           <Table.Cell>{tm.team}</Table.Cell>
           <Table.Cell>{tm.playerCount}</Table.Cell>
-          <Table.Cell><img width="80px" height="60px" src={tm.franchiseLogo} /></Table.Cell>
+          <Table.Cell><img alt="team franchise logo" width="80px" height="60px" src={tm.franchiseLogo} /></Table.Cell>
     </Table.Row>
       )
   })}
@@ -107,7 +131,6 @@ function TeamList(props) {
       </div>
       )
 } else {return(<div>.</div>)}
-
 }
 
 function Players(props) {
@@ -143,7 +166,7 @@ function Players(props) {
   else {return (<div>.</div>)}
 }
 
-export { ClassPicker, MinorTeamPicker, Players, TeamList, YearPicker} ;
+export { ClassPicker, Divisions, MinorTeamPicker, Players, TeamList, YearPicker} ;
 
 
 

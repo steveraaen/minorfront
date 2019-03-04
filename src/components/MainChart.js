@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { AreaChart, BarChart, Label, Legend, Bar, Area, XAxis, YAxis, CartesianGrid, RadialBar, RadialBarChart, Tooltip } from 'recharts';
-import { Button, Image, Modal } from 'semantic-ui-react'
+import React from 'react';
+import {RadialBar, RadialBarChart, Tooltip } from 'recharts';
+import { Image } from 'semantic-ui-react'
 import '../App.css'
 
 function MainChart(props) {
@@ -10,9 +10,9 @@ const CustomTooltip = ({ active, payload, label }) => {
   console.log(payload[0].payload)
     return (
       <div className="tt" style={{ backgroundColor:payload[0].payload.fill }}>      
-        <p>{payload[0].payload.value}</p>
-        <p>{payload[0].payload.name}</p>
-        <p><Image width={300} height={300} src={payload[0].payload.logo} rounded /></p>
+        <div style={{textAlign: 'center', fontSize: 36, fontWeight: 700}}>{payload[0].payload.value} Major League Players</div>
+        <p style={{textAlign: 'center', fontSize: 36, fontWeight: 700}}>{payload[0].payload.name}</p>
+        <div style={{display: 'flex', justifyContent: 'center', padding: 20}}><Image width={300} height={300} src={payload[0].payload.logo} rounded /></div>
       </div>
     );
   }
@@ -34,7 +34,6 @@ const CustomTooltip = ({ active, payload, label }) => {
   })
 
 } 
-var labelPos =["top","left","right","bottom","inside","outside","insideLeft","insideRight","insideTop","insideBottom","insideTopLeft","insideBottomLeft","insideTopRight","insideBottomRight","insideStart","insideEnd","end","center","centerTop","centerBottom"]
     return (
 
     <div>	

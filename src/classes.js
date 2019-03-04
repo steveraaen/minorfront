@@ -13,7 +13,7 @@
 			{
 			name: "Class A Advanced",
 			code: "A+",
-			regex: "^A\+,|,A\+,|,A\+$"
+			regex: "^A+,|,A+,|,A+$"
 			},
 		{
 			name: "Class A",
