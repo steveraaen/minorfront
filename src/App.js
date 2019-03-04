@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { div, Button } from 'semantic-ui-react'
+import { div, Button, Icon } from 'semantic-ui-react'
 import axios from 'axios'
 import Collapsible from 'react-collapsible';
 import { ClassPicker, MinorTeamPicker, MLBMaster, Players, TeamList, YearPicker } from './components/Selections.js'
@@ -30,6 +30,7 @@ function App() {
     const [allMLB] = useState(mlbTeams);
     const [selectedYear, setSelectedYear] = useState(2013);
     const [playerList, setPlayerList] = useState();
+    const [classIcon, setClassIcon] = useState('angle down');
 
     async function getMinors() {
         await axios.get('/api/allMinors')
@@ -44,7 +45,6 @@ function App() {
                 return null;
             });
     }
-
     async function getBestMinors(p, m, y) {
         await axios.get('/api/bestMinors', { params: { p, m, y } })
             .then(res => {
@@ -69,13 +69,19 @@ function App() {
                 return null;
             });
     }
+
     useEffect(() => {
         getMinors()
     }, {});
+ 
     return (
 <div>
   <h1>Home Town Fantasy</h1>
-    <Collapsible trigger="Select Minor League Class">
+    <Collapsible 
+      trigger={<div>Select Minor League Class  <Icon name={classIcon} /></div>} 
+      triggerStyle={{fontSize: 36, padding: 6, margin: 6, borderWidth: 4, borderColor: 'green', borderStyle: 'line'}}
+      >
+    
     <ClassPicker 
       years={years}
       classes={classes} 
@@ -86,7 +92,10 @@ function App() {
       setSelectedClass={setSelectedClass}
       /> 
       </Collapsible> 
-    <Collapsible trigger="Select Year">    
+     <Collapsible 
+      trigger={<div>Select Year  <Icon name={classIcon} /></div>} 
+      triggerStyle={{fontSize: 36, padding: 6, margin: 6, borderWidth: 4, borderColor: 'green', borderStyle: 'line'}}
+      >  
     <YearPicker 
       years={years} 
       classes={classes} 
@@ -97,17 +106,12 @@ function App() {
       setSelectedYear={setSelectedYear} 
       />     
       </Collapsible> 
-        {selectedClass.name}
+      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap'}}>
+        <div style={{fontSize: 36, fontWeight: 600}}>{selectedClass.name}</div>
 
-        {selectedYear}
+        <div style={{fontSize: 36, fontWeight: 600}}>{selectedYear}</div>
+      </div>
    <div style={{display: 'flex', flexDirection: 'row'}}>
-   <div style={{ height:"50vh", overflow: 'scroll'}}>
-     <TeamList {...bestMinors} allMLB={allMLB} selectedYear={selectedYear} selectedClass={selectedClass} playerList={playerList} getPlayerList={getPlayerList} />
-   </div>
-   <div style={{ height:"50vh", overflow: 'scroll'}}>
-
- <Players {...playerList} /> 
-     </div>
       <MainChart 
        {...bestMinors} 
        allMLB={allMLB} 
@@ -115,10 +119,11 @@ function App() {
        selectedYear={selectedYear} 
        getBestMinors={getBestMinors}
        />
+   <div style={{marginRight: 6}}>
+     <TeamList {...bestMinors} allMLB={allMLB} selectedYear={selectedYear} selectedClass={selectedClass} playerList={playerList} getPlayerList={getPlayerList} />
      </div>
-    
-
-     
+     <Players {...playerList} /> 
+     </div>     
      <div>
         
        </div>

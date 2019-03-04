@@ -3,8 +3,6 @@ import { AreaChart, BarChart, Label, Legend, Bar, Area, XAxis, YAxis, CartesianG
 import { Button, Image, Modal } from 'semantic-ui-react'
 import '../App.css'
 
-
-
 function MainChart(props) {
 /*  props.getBestMinors(props.selectedClass.code, props.selectedClass.regex, props.selectedYear, props.selectedClass)*/
 const CustomTooltip = ({ active, payload, label }) => {
@@ -14,7 +12,7 @@ const CustomTooltip = ({ active, payload, label }) => {
       <div className="tt" style={{ backgroundColor:payload[0].payload.fill }}>      
         <p>{payload[0].payload.value}</p>
         <p>{payload[0].payload.name}</p>
-        <p><Image width={200} height={200} src={payload[0].payload.logo} rounded /></p>
+        <p><Image width={300} height={300} src={payload[0].payload.logo} rounded /></p>
       </div>
     );
   }
@@ -52,7 +50,7 @@ var labelPos =["top","left","right","bottom","inside","outside","insideLeft","in
   <RadialBar 
     fill="color" 
     minAngle={15} 
-    label={{ fill: 'black', position: 'right', fontSize: '16pt' }} 
+    label={{ fill: 'white', position: 'right', fontSize: '16pt' }} 
     background 
     clockWise={true} 
     dataKey='value' 

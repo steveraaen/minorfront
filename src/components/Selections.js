@@ -76,6 +76,7 @@ function TeamList(props) {
 
   if(props.bestMinors) {
     return(
+      <div style={{ height:"50vh", overflow: 'scroll'}}>
       <Table style={{backgroundColor: 'rgba(0,0,0,0)'}}>
       <Table.Header>
         <Table.Row>         
@@ -103,6 +104,7 @@ function TeamList(props) {
   })}
       </Table.Body>
       </Table>
+      </div>
       )
 } else {return(<div>.</div>)}
 
@@ -111,7 +113,7 @@ function TeamList(props) {
 function Players(props) {
   if(props.playerList) {
   return(
-    <div>
+    <div style={{ height:"50vh", overflow: 'scroll'}}>
       <Table style={{backgroundColor: 'rgba(0,0,0,0)'}}>
       <Table.Header>
         <Table.Row>         
