@@ -1,97 +1,145 @@
 import React from 'react';
-import { Button, Checkbox, Image,  Loader, Table } from 'semantic-ui-react'
+import { Button, Checkbox, Form, Image,  Loader, Segment, Table } from 'semantic-ui-react'
 import '../App.css'
 
 function YearPicker(props) {
-  function handleClick(c, r, y, n) {
-    console.log(c)  
-      props.getBestMinors(c, r, y, n) 
-      props.setSelectedYear(y)
-      props.setSelectedClass(n)
+  function handleChange(e, { value }) {
+console.log(value)
+      props.getBestMinors(props.selectedClass.code, props.selectedDivision, props.selectedClass.regex, value) 
+      props.setSelectedYear(value)   
 }
   return(
- 
     <div>  
-        <Button.Group>
+    <Segment> 
+        <Form.Group>
         { props.years.map((yr, idx) => {
           return(
-             <Button 
-               basic color='teal'
+             <Form.Checkbox 
+             toggle
+               label={yr.text}
+               value={yr.value}
                key={idx} 
-               onClick={() => handleClick(props.selectedClass.code, props.selectedClass.regex, yr.value, props.selectedClass)}>{yr.text}</Button>
+               onChange={handleChange}
+               checked={props.selectedYear === yr.value}
+               >
+               </Form.Checkbox>
             )
         })        
        }
-        </Button.Group>
+        </Form.Group>
+        </Segment> 
        </div>
 
     )
 }
 function ClassPicker(props) {
-  function handleClick(c, r, y, n) {   
-      props.getBestMinors(c, r, y, n) 
-      props.setSelectedYear(y)
-      props.setSelectedClass(n)
+  function handleChange(e, { value }) {
+console.log(value)
+      props.getBestMinors(value.code, props.selectedDivision, value.regex, props.selectedYear) 
+      props.setSelectedClass(value)   
 }
+
     return ( 
-    <div>  
-        <Button.Group>
+    <div> 
+      <Segment> 
+        <Form.Group>
         { props.classes.map((cl, idx) => {
           return(
-             <Button 
-             basic color='teal' 
+             <Form.Checkbox 
+             toggle
+             label={cl.name}
              key={cl.regex} 
-             onClick={() => handleClick(cl.code, cl.regex, props.selectedYear, cl)}>{cl.name}</Button>
+             value={cl}
+             onChange={handleChange}
+             checked={props.selectedClass === cl}
+             >
+             </Form.Checkbox>
             )
         })         
         }
-        </Button.Group>
+        </Form.Group>
+      </Segment> 
      </div>
     );
 }
-function MinorTeamPicker (props) {
-  function handleClick(c, r, y) { 
-      props.getBestMinors(c, r, y) 
-}
-  return(
-    <div>       
-        { props.allMiLB.map((tm, idx) => {
-          return(
-             <div key={idx} style={{fontSize: 20, fontWeight:600}}>             
-             <Image 
-             width={80}
-               src={tm.logo} 
-               onClick={() => handleClick(props.selectedClass.code, props.selectedClass.regex, props.selectedYear,tm.team)}
-                />
-                {tm.team}
-             </div>
-            )
-        })        
-        }
-        
-  </div>
-    )
-}
+
 function Divisions(props) {
-
-  if(props.divisions) {
+    function handleChange(e, {value}) { 
+      props.setSelectedDivision(value) 
+      props.getBestMinors(props.selectedClass.code, value, props.selectedClass.regex, props.selectedYear) 
+}
+  if(props.allDivisions) {
   return(
-    <div style={{width: "20vw"}}>
-      {props.divisions.map((dvn, idx)=> {
-        return(
-        <div key={idx} style={{backgroundColor: dvn.color}}>
-          <Checkbox
-          toggle
-          label={dvn.display}
-          onClick={() => props.multiSelect(dvn.league)}
+    <div>
 
-          >
-        
-          </Checkbox>
-</div>
-          )
-      })
-    }
+       <Form.Group>
+      <label>Size</label>
+        <Form.Checkbox
+         toggle
+          key={'allMajors'}
+          label={"All Major Leagues"}
+          value={"L"}          
+          onChange={handleChange}
+          checked={props.selectedDivision === "L"}
+        />
+        </Form.Group>
+    <div style={{display: 'flex', flexDirection: 'row'}}>
+    <Segment >
+     <Form.Group>
+      <label>American</label>
+        <Form.Checkbox
+
+         toggle
+          key={'allAL'}
+          label={"All American League"}
+          value={"A"}          
+          onChange={handleChange}
+          checked={props.selectedDivision === "A"}
+        />
+       {props.allDivisions.map((dv, idx) => {
+         if(dv.league === "ALE" || dv.league === "ALC" || dv.league === "ALW") {
+         return(
+         <Form.Checkbox
+         style={{backgroundColor: dv.color}}
+         toggle
+          key={idx}
+          label={dv.display}
+          value={dv.league}          
+          onChange={handleChange}
+          checked={props.selectedDivision === dv.league}
+        />
+           )} 
+       })}     
+    </Form.Group>
+    </Segment>
+    <Segment>
+     <Form.Group>
+      <label>National</label>
+        <Form.Checkbox
+         toggle
+          key={'allNL'}
+          label={"All National League"}
+          value={"N"}          
+          onChange={handleChange}
+          checked={props.selectedDivision === "N"}
+        />
+       {props.allDivisions.map((dv, idx) => {
+         if(dv.league === "NLE" || dv.league === "NLC" || dv.league === "NLW") {
+         return(
+         <Form.Checkbox
+         style={{backgroundColor: dv.color}}
+         toggle
+          key={idx}
+          label={dv.display}
+          value={dv.league}          
+          onChange={handleChange}
+          checked={props.selectedDivision === dv.league}
+        />
+           )}
+       })}     
+    </Form.Group>
+    </Segment>
+    </div>
     </div>
     )
   } else {return <Loader active />}
@@ -166,7 +214,7 @@ function Players(props) {
   else {return (<div>.</div>)}
 }
 
-export { ClassPicker, Divisions, MinorTeamPicker, Players, TeamList, YearPicker} ;
+export { ClassPicker, Divisions,  Players, TeamList, YearPicker} ;
 
 
 
