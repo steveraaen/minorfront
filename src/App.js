@@ -31,7 +31,8 @@ function App() {
     const [classIcon] = useState('angle down');
     const [allDivisions, setAllDivisions] = useState();
     const [selectedDivision, setSelectedDivision] = useState("L");
-    const [sidebarVisible, setSidebarVisible] = useState(false);
+    const [radialData, setRadialData] = useState();
+   
 
     function makeDivs() {
       var uniqueDivisions = allMLB.filter((thing, index, self) =>
@@ -41,15 +42,6 @@ function App() {
     )
   return setAllDivisions({allDivisions: uniqueDivisions})
     }
-  function handleHideClick() {
-    setSidebarVisible({ visible: false })
-  }
-  function handleShowClick() {
-    setSidebarVisible({ visible: true })
-  }
-  function handleSidebarHide() {
-    setSidebarVisible({ visible: false })
-  }
 
 
 /*    async function getMinors() {
@@ -69,8 +61,27 @@ function App() {
       console.log(p,m,y)
         await axios.get('/api/bestMinors', { params: { p, d, m, y } })
             .then(res => {
+              console.log(res.data)
+                var radialFormatted = res.data.map((tm, idx) => {
+                var radObj = {}
+                for(let i = 0; i < allMLB.length; i++) {
+                  if(tm.franchise === allMLB[i].teamCode) {
+                    radObj.fill = allMLB[i].color
+                  }
+                }
+                  radObj.name = tm.playerCount
+                  radObj.value= tm.playerCount
+                  radObj.logo= tm.logo
+                  return radObj
+                })
+                 setRadialData({radialData: radialFormatted})
+
+              
                 setBestMinors({
                     bestMinors: res.data
+                })
+                 setPlayerList({
+                    playerList: null
                 })
             })
             .catch(err => {
@@ -103,15 +114,10 @@ function App() {
 
     return (
 <div>
-  <span>Home town fantasy</span>
-      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap', width: '30vw'}}>
-        <div style={{fontSize: 36, fontWeight: 600}}>{selectedClass.name}</div>
-        <div style={{fontSize: 36, fontWeight: 600}}>{selectedYear}</div>
-        <div style={{fontSize: 36, fontWeight: 600}}>{selectedDivision}</div>
-      </div>
+
 
     <Collapsible 
-      trigger={<div>Select Minor League Class  <Icon name={classIcon} /></div>} 
+      trigger={<div>Select Minor League Class, Year and Franchise  <Icon name={classIcon} /></div>} 
       triggerStyle={{fontSize: 36, padding: 6, margin: 6, borderWidth: 4, borderColor: 'green', borderStyle: 'line'}}
       > 
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', height: 400}} >  
@@ -148,8 +154,14 @@ function App() {
         />
         </div>
         </Collapsible> 
+      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap', width: '30vw'}}>
+        <div style={{fontSize: 36, fontWeight: 600}}>{selectedClass.name}</div>
+        <div style={{fontSize: 36, fontWeight: 600}}>{selectedYear}</div>
+        <div style={{fontSize: 36, fontWeight: 600}}>{selectedDivision}</div>
+      </div>
      <div style={{display: 'flex', flexDirection: 'row'}}>
       <MainChart 
+      {...radialData}
        {...bestMinors} 
        allMLB={allMLB} 
        selectedClass={selectedClass}

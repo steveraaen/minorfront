@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { Component} from 'react';
 import {RadialBar, RadialBarChart, Tooltip } from 'recharts';
 import { Image } from 'semantic-ui-react'
 import '../App.css'
 
 function MainChart(props) {
-/*  props.getBestMinors(props.selectedClass.code, props.selectedClass.regex, props.selectedYear, props.selectedClass)*/
+
+
 const CustomTooltip = ({ active, payload, label }) => {
   if (active) {
   console.log(payload[0].payload)
@@ -18,31 +19,14 @@ const CustomTooltip = ({ active, payload, label }) => {
   }
   return null;
 };
-
-  if(props.bestMinors && props.allMLB) {
-  var radData = props.bestMinors.map((tm, idx) => {
-    var radObj = {}
-    for(let i = 0; i < props.allMLB.length; i++) {
-      if(tm.franchise === props.allMLB[i].teamCode) {
-        radObj.fill = props.allMLB[i].color
-      }
-    }
-    radObj.name = tm.team
-    radObj.value= tm.playerCount
-    radObj.logo= tm.logo
-    return radObj
-  })
-
-} 
     return (
-
     <div>	
       <RadialBarChart 
         width={1000} 
         height={1000} 
         innerRadius="10%" 
         outerRadius="80%" 
-        data={radData} 
+        data={props.radialData} 
         startAngle={0} 
         endAngle={300}
 >
@@ -53,6 +37,7 @@ const CustomTooltip = ({ active, payload, label }) => {
     background 
     clockWise={true} 
     dataKey='value' 
+    nameKey='name' 
    
     />
       <Tooltip  content={<CustomTooltip />} />
