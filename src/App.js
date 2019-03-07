@@ -69,12 +69,12 @@ function App() {
                     radObj.fill = allMLB[i].color
                   }
                 }
-                  radObj.name = tm.playerCount
+                  radObj.name = tm.team
                   radObj.value= tm.playerCount
                   radObj.logo= tm.logo
                   return radObj
                 })
-                 setRadialData({radialData: radialFormatted})
+                 setRadialData({radialData: radialFormatted.sort((a, b) => (a.value > b.value) ? 1 : -1)})
 
               
                 setBestMinors({
