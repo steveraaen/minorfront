@@ -5,7 +5,6 @@ import '../App.css'
 
 function MainChart(props) {
 
-
 const CustomTooltip = ({ active, payload, label }) => {
   if (active) {
   console.log(payload[0].payload)
@@ -20,15 +19,16 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
     return (
-    <div>	
+    <div style={{marginTop: -60}}>	
+
       <RadialBarChart 
-        width={1000} 
-        height={1000} 
+        width={1200} 
+        height={1200} 
         innerRadius="10%" 
         outerRadius="80%" 
         data={props.radialData} 
-        startAngle={0} 
-        endAngle={300}
+        startAngle={50} 
+        endAngle={310}
 >
   <RadialBar 
     fill="color" 

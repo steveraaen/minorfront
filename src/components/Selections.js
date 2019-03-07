@@ -71,9 +71,8 @@ function Divisions(props) {
   if(props.allDivisions) {
   return(
     <div>
-
-       <Form.Group>
-      <label>Size</label>
+     <Segment style={{alignItems: 'center'}}>
+       <Form.Group> 
         <Form.Checkbox
          toggle
           key={'allMajors'}
@@ -82,13 +81,13 @@ function Divisions(props) {
           onChange={handleChange}
           checked={props.selectedDivision === "L"}
         />
+
         </Form.Group>
+            </Segment>
     <div style={{display: 'flex', flexDirection: 'row'}}>
     <Segment >
-     <Form.Group>
-      <label>American</label>
+     <Form.Group>     
         <Form.Checkbox
-
          toggle
           key={'allAL'}
           label={"All American League"}
@@ -100,7 +99,7 @@ function Divisions(props) {
          if(dv.league === "ALE" || dv.league === "ALC" || dv.league === "ALW") {
          return(
          <Form.Checkbox
-         style={{backgroundColor: dv.color}}
+         style={{backgroundColor: dv.color, width: 320, height: 40}}
          toggle
           key={idx}
           label={dv.display}
@@ -112,9 +111,8 @@ function Divisions(props) {
        })}     
     </Form.Group>
     </Segment>
-    <Segment>
-     <Form.Group>
-      <label>National</label>
+    <Segment style={{marginTop: 0, paddingBottom: -6}}>
+     <Form.Group>   
         <Form.Checkbox
          toggle
           key={'allNL'}
@@ -127,7 +125,7 @@ function Divisions(props) {
          if(dv.league === "NLE" || dv.league === "NLC" || dv.league === "NLW") {
          return(
          <Form.Checkbox
-         style={{backgroundColor: dv.color}}
+         style={{backgroundColor: dv.color, width: 320, height: 40}}
          toggle
           key={idx}
           label={dv.display}
@@ -163,14 +161,19 @@ function TeamList(props) {
     for(let i = 0; i < props.allMLB.length; i++) {
       if(tm.franchise === props.allMLB[i].teamCode){
         tm.franchiseLogo= props.allMLB[i].picUrl
+        tm.color= props.allMLB[i].color
       }
     }
     return(
-    <Table.Row onClick={() => props.getPlayerList(props.selectedClass.regex, tm.franchise, tm.yr)} key = {idx}>
+    <Table.Row 
+      onClick={() => props.getPlayerList(props.selectedClass.regex, tm.franchise, tm.yr)} 
+      key = {idx}
+
+      >
           <Table.Cell><img alt="team logo" width="80px" height="80px"  src={tm.logo} /></Table.Cell>
-          <Table.Cell>{tm.team}</Table.Cell>
-          <Table.Cell>{tm.playerCount}</Table.Cell>
-          <Table.Cell><img alt="team franchise logo" width="80px" height="60px" src={tm.franchiseLogo} /></Table.Cell>
+          <Table.Cell style={{color: tm.color, fontSize: 30, fontWeight: 'bold'}}>{tm.team}</Table.Cell>
+          <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{tm.playerCount}</Table.Cell>
+          <Table.Cell><img alt="team franchise logo" width="80px" height="80px" src={tm.franchiseLogo} /></Table.Cell>
     </Table.Row>
       )
   })}

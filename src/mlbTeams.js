@@ -119,15 +119,7 @@ var mlbTeams =[
 		picUrl: "https://securea.mlb.com/assets/images/5/3/2/267952532/cuts/568x320/cut.jpg",
 		teamName: "Toronto Bluejays",
 	},
-	{
-		league : "NLW",
-		display: "NL West",
-		color: '#E9967A',
-		teamCode : "ARI",
-		picUrl: "https://securea.mlb.com/assets/images/7/1/8/267947718/cuts/568x320/cut.jpg",
-		teamName: "Arizona Diamondbacks",
-	},
-	{
+		{
 		league : "NLE",
 		display: "NL East",
 		color: '#FA8072',
@@ -143,6 +135,16 @@ var mlbTeams =[
 		picUrl: "https://securea.mlb.com/assets/images/7/1/2/267951712/cuts/568x320/cut.jpg",
 		teamName: "Chicago Cubs",
 	},
+	{
+		league : "NLW",
+		display: "NL West",
+		color: '#E9967A',
+		teamCode : "ARI",
+		picUrl: "https://securea.mlb.com/assets/images/7/1/8/267947718/cuts/568x320/cut.jpg",
+		teamName: "Arizona Diamondbacks",
+	},
+
+
 	{
 		league : "NLC",
 		display: "NL Central",
@@ -216,14 +218,6 @@ var mlbTeams =[
 		teamName: "San Diego Padres",
 	},
 	{
-		league : "NLW",
-		display: "NL West",
-		color: '#E9967A',
-		teamCode : "SFG",
-		picUrl: "https://securea.mlb.com/assets/images/9/7/0/267951970/cuts/568x320/cut.jpg",
-		teamName: "San Francisco Giants",
-	},
-	{
 		league : "NLC",
 		display: "NL Central",
 		color: '#FFA07A',
@@ -238,6 +232,14 @@ var mlbTeams =[
 		teamCode : "WSN",
 		picUrl: "https://securea.mlb.com/assets/images/8/7/6/267951876/cuts/568x320/cut.jpg",
 		teamName: "Washington Nationals",
+	},
+		{
+		league : "NLW",
+		display: "NL West",
+		color: '#E9967A',
+		teamCode : "SFG",
+		picUrl: "https://securea.mlb.com/assets/images/9/7/0/267951970/cuts/568x320/cut.jpg",
+		teamName: "San Francisco Giants",
 	}
 ]
 module.exports = mlbTeams
