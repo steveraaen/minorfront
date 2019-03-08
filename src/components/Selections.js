@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Checkbox, Form, Image,  Loader, Segment, Table } from 'semantic-ui-react'
+import { Button, Checkbox, Container, Form, Image, Label, Loader, Responsive, Statistic, Segment, Table } from 'semantic-ui-react'
 import '../App.css'
 
 function YearPicker(props) {
@@ -83,7 +83,7 @@ function Divisions(props) {
         />
 
         </Form.Group>
-            </Segment>
+    </Segment>
     <div style={{display: 'flex', flexDirection: 'row'}}>
     <Segment >
      <Form.Group>     
@@ -144,20 +144,21 @@ function Divisions(props) {
  }
 
 function TeamList(props) {
-  if(props.bestMinors) {
+  if(props.radialData) {
     return(
-      <div style={{ height:"50vh", overflow: 'scroll'}}>
-      <Table style={{backgroundColor: 'rgba(0,0,0,0)'}}>
+    <Responsive>
+      <div style={{ height:"80vh", overflow: 'scroll'}}>
+      <Table  stackable style={{backgroundColor: 'rgba(0,0,0,0)'}}>
       <Table.Header>
-        <Table.Row>         
-          <Table.HeaderCell></Table.HeaderCell>          
-          <Table.HeaderCell>Team</Table.HeaderCell>          
-          <Table.HeaderCell>MLB Players</Table.HeaderCell>          
+        <Table.Row>                   
+          <Table.HeaderCell style={{color: 'black', maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis'}}></Table.HeaderCell>          
+          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis'}}>Team</Table.HeaderCell>          
+          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold', maxWidth: 20}}>MLB Players</Table.HeaderCell>          
           <Table.HeaderCell>Franchise</Table.HeaderCell>          
         </Table.Row>
       </Table.Header>
       <Table.Body>
-      {props.bestMinors.map((tm, idx) => {   
+      {props.radialData.map((tm, idx) => {   
     for(let i = 0; i < props.allMLB.length; i++) {
       if(tm.franchise === props.allMLB[i].teamCode){
         tm.franchiseLogo= props.allMLB[i].picUrl
@@ -166,20 +167,23 @@ function TeamList(props) {
     }
     return(
     <Table.Row 
-      onClick={() => props.getPlayerList(props.selectedClass.regex, tm.franchise, tm.yr)} 
+      onClick={() => {props.getPlayerList(props.selectedClass.regex, tm.franchise, props.selectedYear, tm.name)
+                      props.setSelectedMiLBTeam(({name: tm.name, logo: tm.logo, color: tm.color}))
+                    } }
       key = {idx}
-
       >
-          <Table.Cell><img alt="team logo" width="80px" height="80px"  src={tm.logo} /></Table.Cell>
-          <Table.Cell style={{color: tm.color, fontSize: 30, fontWeight: 'bold'}}>{tm.team}</Table.Cell>
-          <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{tm.playerCount}</Table.Cell>
-          <Table.Cell><img alt="team franchise logo" width="80px" height="80px" src={tm.franchiseLogo} /></Table.Cell>
+          
+          <Table.Cell style={{width: 60}}><img alt="team logo" width={120} height={100} src={tm.logo} /></Table.Cell>
+          <Table.Cell style={{color: tm.color, fontSize: 30, fontWeight: 'bold', width: 20, overflow: 'hidden', textOverflow: 'ellipsis'}}>{tm.name}</Table.Cell>
+          <Table.Cell style={{color: 'black', fontSize: 30, fontWeight: 'bold', width: 20}}>{tm.value}</Table.Cell>
+          <Table.Cell style={{width: 10}}><img alt="team franchise logo" width={160} height={100} src={tm.franchiseLogo} /></Table.Cell>
     </Table.Row>
       )
   })}
       </Table.Body>
       </Table>
       </div>
+    </Responsive>
       )
 } else {return(<div>.</div>)}
 }
@@ -216,8 +220,30 @@ function Players(props) {
     )}
   else {return (<div>.</div>)}
 }
+function Stats(props) {
+  if(props.synthStats){
+return(
+  <div>
+  <Segment>
+    <Statistic.Group>
+      <Statistic>
+        <Statistic.Label>At Bats</Statistic.Label>
+        <Statistic.Value>{props.synthStats.abs.AB}</Statistic.Value>
+        
+      </Statistic>
+      <Statistic>
+        <Statistic.Label>Batting Average</Statistic.Label>
+        <Statistic.Value>{props.synthStats.abs.AVG}</Statistic.Value>
+        
+      </Statistic>
+    </Statistic.Group>
+    </Segment>
+  </div>
+  )
+} else {return null}
+}
 
-export { ClassPicker, Divisions,  Players, TeamList, YearPicker} ;
+export { ClassPicker, Divisions,  Players, Stats, TeamList, YearPicker} ;
 
 
 

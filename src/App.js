@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Icon } from 'semantic-ui-react'
 import axios from 'axios'
 import Collapsible from 'react-collapsible';
-import { ClassPicker, Players, TeamList, YearPicker, Divisions } from './components/Selections.js'
+import { ClassPicker, Players, TeamList, YearPicker, Divisions, Stats } from './components/Selections.js'
 import MainChart from './components/MainChart'
 
 import './App.css'
@@ -32,6 +32,8 @@ function App() {
     const [allDivisions, setAllDivisions] = useState();
     const [selectedDivision, setSelectedDivision] = useState("L");
     const [radialData, setRadialData] = useState();
+    const [synthStats, setSynthStats] = useState();
+    const [selectedMiLBTeam, setSelectedMiLBTeam] = useState();
    
     function makeDivs() {
       var uniqueDivisions = allMLB.filter((thing, index, self) =>
@@ -66,11 +68,14 @@ function App() {
                   if(tm.franchise === allMLB[i].teamCode) {
                     radObj.fill = allMLB[i].color
                     radObj.franchiseLogo = allMLB[i].picUrl
-                  }
+                    radObj.division= allMLB[i].display
+                    radObj.franchise= allMLB[i].teamCode
+                    }
                 }
                   radObj.name = tm.team
                   radObj.value= tm.playerCount
                   radObj.logo= tm.logo
+                  
                   return radObj
                 })
                  setRadialData({radialData: radialFormatted.sort((a, b) => (a.value > b.value) ? 1 : -1)})
@@ -88,9 +93,23 @@ function App() {
                 return null;
             });
     }
-    async function getPlayerList(r, f, y) {
-        await axios.get('/api/playerList', { params: { r, f, y } })
+    async function getPlayerList(r, f, y, t) {
+        await axios.get('/api/playerList', { params: { r, f, y, t } })
             .then(res => {
+              console.log(res.data)
+               var stats = {}
+               stats.abs = res.data.reduce((a, b) => ({
+                   AB: a.AB + b.AB,
+                   H: a.H + b.H,
+                   AVG: ((a.H + b.H) /(a.AB + b.AB)).toFixed(3)
+                 })
+               )
+               console.log(stats)
+
+              setSynthStats({
+                synthStats: stats
+              })
+
                 setPlayerList({
                     playerList: res.data
                 })
@@ -175,10 +194,13 @@ function App() {
        selectedYear={selectedYear} 
        selectedClass={selectedClass} 
        playerList={playerList} 
-       getPlayerList={getPlayerList} />
+       getPlayerList={getPlayerList}
+       setSelectedMiLBTeam={setSelectedMiLBTeam} 
+        />
      </div>
      <div>
-     <Players {...playerList} /> 
+     <Stats {...synthStats} selectedMiLBTeam={selectedMiLBTeam}/>
+     <Players {...playerList} selectedMiLBTeam={selectedMiLBTeam}/> 
      </div>     
      </div>     
 
