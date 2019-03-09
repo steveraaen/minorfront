@@ -154,7 +154,7 @@ function TeamList(props) {
           <Table.HeaderCell style={{color: 'black', maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis'}}></Table.HeaderCell>          
           <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis'}}>Team</Table.HeaderCell>          
           <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold', maxWidth: 20}}>MLB Players</Table.HeaderCell>          
-          <Table.HeaderCell>Franchise</Table.HeaderCell>          
+          <Table.HeaderCell style={{textAlign: "right"}}>Franchise</Table.HeaderCell>          
         </Table.Row>
       </Table.Header>
       <Table.Body>
@@ -195,20 +195,20 @@ function Players(props) {
       <Table style={{backgroundColor: 'rgba(0,0,0,0)'}}>
       <Table.Header>
         <Table.Row>         
-          <Table.HeaderCell>Player</Table.HeaderCell>          
-          <Table.HeaderCell>Team</Table.HeaderCell>          
-          <Table.HeaderCell>At Bats</Table.HeaderCell>          
-          <Table.HeaderCell>Average</Table.HeaderCell>          
+          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Player</Table.HeaderCell>          
+          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Team</Table.HeaderCell>          
+          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>At Bats</Table.HeaderCell>          
+          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Average</Table.HeaderCell>          
         </Table.Row>
       </Table.Header>
       <Table.Body>
       {props.playerList.map((pl, idx) => {
         return(
         <Table.Row key={idx}>
-          <Table.Cell>{pl.playerName}</Table.Cell>
-          <Table.Cell>{pl.teamID}</Table.Cell>
-          <Table.Cell>{pl.AB}</Table.Cell>
-          <Table.Cell>{pl.AVG}</Table.Cell>
+          <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{pl.playerName}</Table.Cell>
+          <Table.Cell style={{fontSize: 30, fontWeight: 'bold', color: pl.color}}>{pl.teamID}</Table.Cell>
+          <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{pl.AB}</Table.Cell>
+          <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{pl.AVG}</Table.Cell>
         </Table.Row>
         )
         })
@@ -221,15 +221,28 @@ function Players(props) {
   else {return (<div>.</div>)}
 }
 function Stats(props) {
-  if(props.synthStats){
+  if(props.synthStats && props.selectedMiLBTeam.name){
 return(
   <div>
+  <div style={{display: 'flex', justifyContent: 'center'}}>
+  <Image src={props.selectedMiLBTeam.logo} width={240} height={200}/>
+  </div>
   <Segment>
     <Statistic.Group>
       <Statistic>
+     
+        <Statistic.Value>{props.selectedYear}</Statistic.Value>        
+      </Statistic>
+      <Statistic>
+      
+        <Statistic.Value style={{color: props.selectedMiLBTeam.color}}>{props.selectedMiLBTeam.name}</Statistic.Value>         
+      </Statistic>
+    </Statistic.Group>
+
+    <Statistic.Group>
+      <Statistic>
         <Statistic.Label>At Bats</Statistic.Label>
-        <Statistic.Value>{props.synthStats.abs.AB}</Statistic.Value>
-        
+        <Statistic.Value>{props.synthStats.abs.AB}</Statistic.Value>        
       </Statistic>
       <Statistic>
         <Statistic.Label>Batting Average</Statistic.Label>

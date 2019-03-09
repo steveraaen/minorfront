@@ -28,6 +28,7 @@ function App() {
     const [allMLB] = useState(mlbTeams);
     const [selectedYear, setSelectedYear] = useState(2013);
     const [playerList, setPlayerList] = useState();
+    const [pitcherList, setPitcherList] = useState();
     const [classIcon] = useState('angle down');
     const [allDivisions, setAllDivisions] = useState();
     const [selectedDivision, setSelectedDivision] = useState("L");
@@ -78,8 +79,9 @@ function App() {
                   
                   return radObj
                 })
-                 setRadialData({radialData: radialFormatted.sort((a, b) => (a.value > b.value) ? 1 : -1)})
-
+                 setRadialData({
+                   radialData: radialFormatted.sort((a, b) => (a.value < b.value) ? 1 : -1)
+                 })
               
                 setBestMinors({
                     bestMinors: res.data
@@ -87,16 +89,19 @@ function App() {
                  setPlayerList({
                     playerList: null
                 })
+                 setSelectedMiLBTeam({
+                    selectedMiLBTeam: null
+                })
             })
             .catch(err => {
                 console.log(err);
                 return null;
             });
     }
-    async function getPlayerList(r, f, y, t) {
-        await axios.get('/api/playerList', { params: { r, f, y, t } })
+/*    async function getPlayerList(r, f, y, t) {
+        await axios.get('/api/batterList', { params: { r, f, y, t } })
             .then(res => {
-              console.log(res.data)
+                    
                var stats = {}
                stats.abs = res.data.reduce((a, b) => ({
                    AB: a.AB + b.AB,
@@ -105,11 +110,19 @@ function App() {
                  })
                )
                console.log(stats)
-
               setSynthStats({
                 synthStats: stats
               })
 
+               var playerListFormatted = res.data.map((plyr, idx) => {
+                 console.log(res.data)
+                 for(let i = 0; i < allMLB.length; i++) {
+                   if(plyr.teamID === allMLB[i].teamCode) {
+                     plyr.color = allMLB[i].color
+
+                   }
+                 }
+               })
                 setPlayerList({
                     playerList: res.data
                 })
@@ -118,8 +131,47 @@ function App() {
                 console.log(err);
                 return null;
             });
-    }
+    }*/
+    async function getPlayerList(r, f, y, t) {
+      try {
+        const batterPromise = axios('/api/batterList', { params: { r, f, y, t } })
+        const pitcherPromise = axios('/api/pitcherList', { params: { r, f, y, t } })
+        const [batterList, pitcherList] = await Promise.all([batterPromise, pitcherPromise]);
 
+                    
+               var stats = {}
+               stats.abs = batterList.data.reduce((a, b) => ({
+                   AB: a.AB + b.AB,
+                   H: a.H + b.H,
+                   AVG: ((a.H + b.H) /(a.AB + b.AB)).toFixed(3)
+                 })
+               )
+              
+              setSynthStats({
+                synthStats: stats
+              })
+
+               var playerListFormatted = batterList.data.map((plyr, idx) => {
+                
+                 for(let i = 0; i < allMLB.length; i++) {
+                   if(plyr.teamID === allMLB[i].teamCode) {
+                     plyr.color = allMLB[i].color
+
+                   }
+                 }
+               })
+                setPlayerList({
+                    playerList: batterList.data
+                })
+                setPitcherList({
+                    pitcherList: pitcherList.data
+                })
+                
+          }
+             catch (e) {
+    console.error(e);  
+  };
+    }
     useEffect(() => {
         getMinors()
     }, {});
@@ -199,8 +251,8 @@ function App() {
         />
      </div>
      <div>
-     <Stats {...synthStats} selectedMiLBTeam={selectedMiLBTeam}/>
-     <Players {...playerList} selectedMiLBTeam={selectedMiLBTeam}/> 
+     <Stats {...synthStats} selectedMiLBTeam={selectedMiLBTeam} selectedYear={selectedYear}/>
+     <Players {...playerList} {...pitcherList} selectedMiLBTeam={selectedMiLBTeam}/> 
      </div>     
      </div>     
 
