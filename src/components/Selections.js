@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button, Checkbox, Container, Form, Image, Label, Loader, Responsive, Statistic, Segment, Table } from 'semantic-ui-react'
+import { Button, Checkbox, Container, Form, Image, Label, Loader, Responsive, Statistic, Sticky, Segment, Table } from 'semantic-ui-react'
 import '../App.css'
 
 function YearPicker(props) {
   function handleChange(e, { value }) {
 console.log(value)
-      props.getBestMinors(props.selectedClass.code, props.selectedDivision, props.selectedClass.regex, value) 
+      props.getBestMinors(props.selectedClass.code, props.selectedDivision.value, props.selectedClass.regex, value) 
       props.setSelectedYear(value)   
 }
   return(
@@ -35,7 +35,7 @@ console.log(value)
 function ClassPicker(props) {
   function handleChange(e, { value }) {
 console.log(value)
-      props.getBestMinors(value.code, props.selectedDivision, value.regex, props.selectedYear) 
+      props.getBestMinors(value.code, props.selectedDivision.value, value.regex, props.selectedYear) 
       props.setSelectedClass(value)   
 }
 
@@ -64,8 +64,9 @@ console.log(value)
 }
 
 function Divisions(props) {
-    function handleChange(e, {value}) { 
-      props.setSelectedDivision(value) 
+    function handleChange(e, {value, label}) { 
+      console.log(label)
+      props.setSelectedDivision({value: value, display: label}) 
       props.getBestMinors(props.selectedClass.code, value, props.selectedClass.regex, props.selectedYear) 
 }
   if(props.allDivisions) {
@@ -79,7 +80,7 @@ function Divisions(props) {
           label={"All Major Leagues"}
           value={"L"}          
           onChange={handleChange}
-          checked={props.selectedDivision === "L"}
+          checked={props.selectedDivision.value === "L"}
         />
 
         </Form.Group>
@@ -93,7 +94,7 @@ function Divisions(props) {
           label={"All American League"}
           value={"A"}          
           onChange={handleChange}
-          checked={props.selectedDivision === "A"}
+          checked={props.selectedDivision.value === "A"}
         />
        {props.allDivisions.map((dv, idx) => {
          if(dv.league === "ALE" || dv.league === "ALC" || dv.league === "ALW") {
@@ -105,7 +106,7 @@ function Divisions(props) {
           label={dv.display}
           value={dv.league}          
           onChange={handleChange}
-          checked={props.selectedDivision === dv.league}
+          checked={props.selectedDivision.value === dv.league}
         />
            )} 
        })}     
@@ -119,7 +120,7 @@ function Divisions(props) {
           label={"All National League"}
           value={"N"}          
           onChange={handleChange}
-          checked={props.selectedDivision === "N"}
+          checked={props.selectedDivision.value === "N"}
         />
        {props.allDivisions.map((dv, idx) => {
          if(dv.league === "NLE" || dv.league === "NLC" || dv.league === "NLW") {
@@ -131,7 +132,7 @@ function Divisions(props) {
           label={dv.display}
           value={dv.league}          
           onChange={handleChange}
-          checked={props.selectedDivision === dv.league}
+          checked={props.selectedDivision.value === dv.league}
         />
            )}
        })}     
@@ -146,14 +147,14 @@ function Divisions(props) {
 function TeamList(props) {
   if(props.radialData) {
     return(
-    <Responsive>
-      <div style={{ height:"80vh", overflow: 'scroll'}}>
-      <Table  stackable style={{backgroundColor: 'rgba(0,0,0,0)'}}>
-      <Table.Header>
+ 
+      <div style={{ height: '68vh', overflow: 'scroll'}}>
+      <Table  style={{backgroundColor: 'rgba(0,0,0,0)'}}>
+      <Table.Header sticky="true">
         <Table.Row>                   
-          <Table.HeaderCell style={{color: 'black', maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis'}}></Table.HeaderCell>          
-          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis'}}>Team</Table.HeaderCell>          
-          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold', maxWidth: 20}}>MLB Players</Table.HeaderCell>          
+              
+          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold', overflow: 'hidden', textOverflow: 'ellipsis'}}>Team</Table.HeaderCell>          
+          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>MLB Players</Table.HeaderCell>          
           <Table.HeaderCell style={{textAlign: "right"}}>Franchise</Table.HeaderCell>          
         </Table.Row>
       </Table.Header>
@@ -171,28 +172,28 @@ function TeamList(props) {
                       props.setSelectedMiLBTeam(({name: tm.name, logo: tm.logo, color: tm.color}))
                     } }
       key = {idx}
-      >
-          
-          <Table.Cell style={{width: 60}}><img alt="team logo" width={120} height={100} src={tm.logo} /></Table.Cell>
-          <Table.Cell style={{color: tm.color, fontSize: 30, fontWeight: 'bold', width: 20, overflow: 'hidden', textOverflow: 'ellipsis'}}>{tm.name}</Table.Cell>
+      >        
+         
+          <Table.Cell style={{color: tm.color, fontSize: 30, fontWeight: 'bold', width: 24, overflow: 'hidden', textOverflow: 'ellipsis'}}>{tm.name}</Table.Cell>
           <Table.Cell style={{color: 'black', fontSize: 30, fontWeight: 'bold', width: 20}}>{tm.value}</Table.Cell>
-          <Table.Cell style={{width: 10}}><img alt="team franchise logo" width={160} height={100} src={tm.franchiseLogo} /></Table.Cell>
+          <Table.Cell style={{width: 10}}><img alt="team franchise logo" width={120} height={90} src={tm.franchiseLogo} /></Table.Cell>
     </Table.Row>
       )
   })}
       </Table.Body>
       </Table>
       </div>
-    </Responsive>
+ 
       )
 } else {return(<div>.</div>)}
 }
 
-function Players(props) {
+function Batters(props) {
   if(props.playerList) {
   return(
     <div style={{ height:"50vh", overflow: 'scroll'}}>
-      <Table style={{backgroundColor: 'rgba(0,0,0,0)'}}>
+    <Segment>
+      <Table compact style={{backgroundColor: 'rgba(0,0,0,0)'}}>
       <Table.Header>
         <Table.Row>         
           <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Player</Table.HeaderCell>          
@@ -208,55 +209,111 @@ function Players(props) {
           <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{pl.playerName}</Table.Cell>
           <Table.Cell style={{fontSize: 30, fontWeight: 'bold', color: pl.color}}>{pl.teamID}</Table.Cell>
           <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{pl.AB}</Table.Cell>
-          <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{pl.AVG}</Table.Cell>
+          <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{parseFloat(pl.AVG).toFixed(3)}</Table.Cell>
         </Table.Row>
         )
         })
         }
       </Table.Body>
-
     </Table>
+    </Segment>
   </div>
     )}
   else {return (<div>.</div>)}
+}
+function Pitchers(props) {
+  if(props.pitcherList) {
+    return(
+      <Segment>
+      <Table compact style={{backgroundColor: 'rgba(0,0,0,0)'}}>
+      <Table.Header>
+        <Table.Row>         
+          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Player</Table.HeaderCell>          
+          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Team</Table.HeaderCell>          
+          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Innings</Table.HeaderCell>                   
+          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>ERA</Table.HeaderCell>          
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+      {props.pitcherList.map((pt, idx) => {
+        return(
+        <Table.Row key={idx}>
+          <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{pt.playerName}</Table.Cell>
+          <Table.Cell style={{fontSize: 30, fontWeight: 'bold', color: pt.color}}>{pt.teamID}</Table.Cell>
+          <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{pt.IP.toFixed(1)}</Table.Cell>
+          <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{parseFloat(9 * (pt.ER / pt.IP)).toFixed(2)}</Table.Cell>
+        </Table.Row>
+        )
+        })
+        }
+      </Table.Body>
+    </Table>
+    </Segment>
+        )
+    } else {return(<div></div>)}
 }
 function Stats(props) {
   if(props.synthStats && props.selectedMiLBTeam.name){
 return(
   <div>
-  <div style={{display: 'flex', justifyContent: 'center'}}>
-  <Image src={props.selectedMiLBTeam.logo} width={240} height={200}/>
-  </div>
   <Segment>
     <Statistic.Group>
-      <Statistic>
-     
-        <Statistic.Value>{props.selectedYear}</Statistic.Value>        
-      </Statistic>
-      <Statistic>
-      
+  <Image src={props.selectedMiLBTeam.logo} width={180} height={160}/>
+        <Statistic size='mini'>     
         <Statistic.Value style={{color: props.selectedMiLBTeam.color}}>{props.selectedMiLBTeam.name}</Statistic.Value>         
       </Statistic>
-    </Statistic.Group>
 
-    <Statistic.Group>
-      <Statistic>
-        <Statistic.Label>At Bats</Statistic.Label>
-        <Statistic.Value>{props.synthStats.abs.AB}</Statistic.Value>        
+
+      <Statistic size='mini'>
+     
+        <Statistic.Value>{props.selectedYear}</Statistic.Value> 
+        <Statistic.Label>Year</Statistic.Label>       
       </Statistic>
-      <Statistic>
-        <Statistic.Label>Batting Average</Statistic.Label>
-        <Statistic.Value>{props.synthStats.abs.AVG}</Statistic.Value>
-        
+
+
+      <Statistic size='mini'>
+        <Statistic.Value>{props.synthStats.batting.bat.AB}</Statistic.Value> 
+        <Statistic.Label>At Bats</Statistic.Label>       
+      </Statistic>
+      <Statistic size='mini'>
+        <Statistic.Value>{props.synthStats.batting.bat.AVG}</Statistic.Value>   
+        <Statistic.Label>Batting Average</Statistic.Label>     
+      </Statistic>
+
+      <Statistic size='mini'>
+        <Statistic.Value>{props.synthStats.pitching.pit.IP.toFixed(1)}</Statistic.Value>  
+        <Statistic.Label>Innings Pitched</Statistic.Label>      
+      </Statistic>
+      <Statistic size='mini'>
+
+        <Statistic.Value>{props.synthStats.pitching.pit.ERA}</Statistic.Value> 
+        <Statistic.Label>ERA</Statistic.Label>       
       </Statistic>
     </Statistic.Group>
     </Segment>
   </div>
-  )
-} else {return null}
+    )
+  } else {return null}
 }
-
-export { ClassPicker, Divisions,  Players, Stats, TeamList, YearPicker} ;
+function CurrentParams(props) {
+  return(
+    <Statistic.Group widths="5">
+      <Statistic size='small'>
+        <Statistic.Label>Minor League Class</Statistic.Label>
+        <Statistic.Value>{props.selectedClass.name}</Statistic.Value>        
+      </Statistic>
+      <Statistic size='small'>
+        <Statistic.Label>Minor League Year</Statistic.Label>
+        <Statistic.Value>{props.selectedYear}</Statistic.Value>        
+      </Statistic>
+      <Statistic size='small'>
+        <Statistic.Label>Major League Selection</Statistic.Label>
+        <Statistic.Value>{props.selectedDivision.display}</Statistic.Value>        
+      </Statistic>
+    </Statistic.Group>
+    )
+}
+export { ClassPicker, CurrentParams, Divisions,  Batters, Pitchers, Stats, TeamList, YearPicker} ;
 
 
 

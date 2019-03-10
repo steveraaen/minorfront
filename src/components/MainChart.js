@@ -1,5 +1,5 @@
 import React, { Component} from 'react';
-import {RadialBar, RadialBarChart, ResponsiveContainer, Tooltip } from 'recharts';
+import {RadialBar, RadialBarChart, Tooltip } from 'recharts';
 import { Image } from 'semantic-ui-react'
 import '../App.css'
 
@@ -19,10 +19,11 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
     return (
-    <div style={{marginTop: -60, marginLeft: -120}}>	
-<ResponsiveContainer width={1200} height="100%">
+    <div>	
+
       <RadialBarChart 
-        width={1200} 
+
+        width={1000} 
         height={1200} 
         innerRadius="10%" 
         outerRadius="80%" 
@@ -42,7 +43,7 @@ const CustomTooltip = ({ active, payload, label }) => {
     />
       <Tooltip  content={<CustomTooltip />} />
   </RadialBarChart>
-  </ResponsiveContainer>
+
   </div>  
 
     );

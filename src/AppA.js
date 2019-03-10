@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Icon, Responsive, Segment } from 'semantic-ui-react'
-
+import { Icon } from 'semantic-ui-react'
 import axios from 'axios'
 import Collapsible from 'react-collapsible';
-import { ClassPicker, CurrentParams, Batters, Pitchers, TeamList, YearPicker, Divisions, Stats } from './components/Selections.js'
+import { ClassPicker, Batters, Pitchers, TeamList, YearPicker, Divisions, Stats } from './components/Selections.js'
 import MainChart from './components/MainChart'
 
 import './App.css'
@@ -32,7 +31,7 @@ function App() {
     const [pitcherList, setPitcherList] = useState();
     const [classIcon] = useState('angle down');
     const [allDivisions, setAllDivisions] = useState();
-    const [selectedDivision, setSelectedDivision] = useState({value: "L", display: "All Major League Teams"});
+    const [selectedDivision, setSelectedDivision] = useState("L");
     const [radialData, setRadialData] = useState();
     const [synthStats, setSynthStats] = useState();
     const [selectedMiLBTeam, setSelectedMiLBTeam] = useState();
@@ -164,89 +163,67 @@ function App() {
         makeDivs()
     }, {});
     useEffect(() => {
-        getBestMinors(selectedClass.code, selectedDivision.value, selectedClass.regex, selectedYear)
+        getBestMinors(selectedClass.code, selectedDivision, selectedClass.regex, selectedYear)
     }, {});
 
     return (
-
-  <Grid  stackable>
-  <Grid.Row>
-      <Grid.Column width="16">
-        <Segment stacked>
-           <Collapsible 
-            trigger={<div>Select Minor League Class, Year and Franchise  <Icon name={classIcon} /></div>} 
-            triggerStyle={{fontSize: 36, padding: 6, margin: 6, borderWidth: 4, borderColor: 'green', borderStyle: 'line'}}
-            > 
-            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', height: 400}} >  
-            <ClassPicker
-              minors={minors}
-              years={years}
-              classes={classes} 
-              getBestMinors={getBestMinors} 
-              selectedClass={selectedClass} 
-              selectedYear={selectedYear} 
-              selectedDivision={selectedDivision} 
-              setSelectedYear={setSelectedYear}
-              setSelectedClass={setSelectedClass}
-              />        
-            <YearPicker 
-              years={years} 
-              classes={classes} 
-              getBestMinors={getBestMinors} 
-              selectedClass={selectedClass} 
-              setSelectedClass={setSelectedClass} 
-              selectedYear={selectedYear} 
-              selectedDivision={selectedDivision} 
-              setSelectedYear={setSelectedYear} 
-              />            
-            <Divisions 
-              setSelectedDivision={setSelectedDivision} 
-              getBestMinors={getBestMinors} 
-              allMLB={allMLB} {...allDivisions} 
-              setSelectedDivision={setSelectedDivision} 
-              selectedYear={selectedYear} 
-              selectedDivision={selectedDivision} 
-              selectedClass={selectedClass}
-              />
-            </div>
-          </Collapsible> 
-        </Segment>
-      </Grid.Column>
-  </Grid.Row>
-  <Grid.Row>
-    <Grid.Column width="5">
-      <Segment>
-      <CurrentParams 
-        allDivisions={allDivisions} 
+<div>
+    <Collapsible 
+      trigger={<div>Select Minor League Class, Year and Franchise  <Icon name={classIcon} /></div>} 
+      triggerStyle={{fontSize: 36, padding: 6, margin: 6, borderWidth: 4, borderColor: 'green', borderStyle: 'line'}}
+      > 
+      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', height: 400}} >  
+      <ClassPicker
+        minors={minors}
+        years={years}
+        classes={classes} 
+        getBestMinors={getBestMinors} 
         selectedClass={selectedClass} 
-        selectedDivision={selectedDivision}
-        selectedYear={selectedYear}/>
-      </Segment>
-     </Grid.Column>
-     <Grid.Column width="11">
-      <Segment>
-       <Stats  
-            {...synthStats} 
-            selectedMiLBTeam={selectedMiLBTeam} 
-            selectedYear={selectedYear}
-            />
-       \</Segment>
-    </Grid.Column>
-  </Grid.Row>
-      <Grid.Column mobile={16} tablet={12} computer={5}>  
-            
-        <MainChart 
-         {...radialData}
-         {...bestMinors} 
-         allMLB={allMLB} 
-         selectedClass={selectedClass}
-         selectedYear={selectedYear} 
-         getBestMinors={getBestMinors}
-         />  
-          
-      </Grid.Column>
-      <Grid.Column width="5">
-      <TeamList 
+        selectedYear={selectedYear} 
+        selectedDivision={selectedDivision} 
+        setSelectedYear={setSelectedYear}
+        setSelectedClass={setSelectedClass}
+        /> 
+ 
+      <YearPicker 
+        years={years} 
+        classes={classes} 
+        getBestMinors={getBestMinors} 
+        selectedClass={selectedClass} 
+        setSelectedClass={setSelectedClass} 
+        selectedYear={selectedYear} 
+        selectedDivision={selectedDivision} 
+        setSelectedYear={setSelectedYear} 
+        />     
+ 
+      <Divisions 
+        setSelectedDivision={setSelectedDivision} 
+        getBestMinors={getBestMinors} 
+        allMLB={allMLB} {...allDivisions} 
+        setSelectedDivision={setSelectedDivision} 
+        selectedYear={selectedYear} 
+        selectedDivision={selectedDivision} 
+        selectedClass={selectedClass}
+        />
+      </div>
+
+    </Collapsible> 
+      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap', width: '30vw'}}>
+        <div style={{fontSize: 36, fontWeight: 600}}>{selectedClass.name}</div>
+        <div style={{fontSize: 36, fontWeight: 600}}>{selectedYear}</div>
+        <div style={{fontSize: 36, fontWeight: 600}}>{selectedDivision}</div>
+      </div>
+     <div style={{display: 'flex', flexDirection: 'row'}}>
+      <MainChart 
+      {...radialData}
+       {...bestMinors} 
+       allMLB={allMLB} 
+       selectedClass={selectedClass}
+       selectedYear={selectedYear} 
+       getBestMinors={getBestMinors}
+       />
+   <div style={{display: 'flex'}}>
+     <TeamList 
        {...radialData}
        {...bestMinors} 
        allMLB={allMLB} 
@@ -256,26 +233,17 @@ function App() {
        getPlayerList={getPlayerList}
        setSelectedMiLBTeam={setSelectedMiLBTeam} 
         />
-      </Grid.Column>
-      <Grid.Column width="6">
-        <Grid.Row>
-          <Grid.Column width="3">
-            <Batters  
-              {...playerList} 
-              selectedMiLBTeam={selectedMiLBTeam} 
-              synthStats={synthStats}
-              />
-          </Grid.Column>
-          <Grid.Column width="3">
-            <Pitchers 
-              {...pitcherList} 
-              selectedMiLBTeam={selectedMiLBTeam} 
-              synthStats={synthStats}
-              />
-          </Grid.Column>
-        </Grid.Row>
-      </Grid.Column>
-  </Grid>
+     </div>
+     <div>
+     <Stats {...synthStats} selectedMiLBTeam={selectedMiLBTeam} selectedYear={selectedYear}/>
+      <div style={{display: 'flex', flexDirection: 'row'}}>
+   <Batters {...playerList} selectedMiLBTeam={selectedMiLBTeam} synthStats={synthStats}/> 
+   <Pitchers {...pitcherList} selectedMiLBTeam={selectedMiLBTeam} synthStats={synthStats}/> 
+    </div>
+     </div>     
+     </div>     
+
+</div>
     );
 }
 
