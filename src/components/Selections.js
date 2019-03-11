@@ -82,7 +82,6 @@ function Divisions(props) {
           onChange={handleChange}
           checked={props.selectedDivision.value === "L"}
         />
-
         </Form.Group>
     </Segment>
     <div style={{display: 'flex', flexDirection: 'row'}}>
@@ -146,8 +145,7 @@ function Divisions(props) {
 
 function TeamList(props) {
   if(props.radialData) {
-    return(
- 
+    return( 
       <div style={{ height: '68vh', overflow: 'scroll'}}>
       <Table  style={{backgroundColor: 'rgba(0,0,0,0)'}}>
       <Table.Header sticky="true">
@@ -169,11 +167,10 @@ function TeamList(props) {
     return(
     <Table.Row 
       onClick={() => {props.getPlayerList(props.selectedClass.regex, tm.franchise, props.selectedYear, tm.name)
-                      props.setSelectedMiLBTeam(({name: tm.name, logo: tm.logo, color: tm.color}))
+                      props.setSelectedMiLBTeam(({name: tm.name, logo: tm.logo, franchise: tm.franchise, franchiseLogo: tm.franchiseLogo, color: tm.color}))
                     } }
       key = {idx}
-      >        
-         
+      >              
           <Table.Cell style={{color: tm.color, fontSize: 30, fontWeight: 'bold', width: 24, overflow: 'hidden', textOverflow: 'ellipsis'}}>{tm.name}</Table.Cell>
           <Table.Cell style={{color: 'black', fontSize: 30, fontWeight: 'bold', width: 20}}>{tm.value}</Table.Cell>
           <Table.Cell style={{width: 10}}><img alt="team franchise logo" width={120} height={90} src={tm.franchiseLogo} /></Table.Cell>
@@ -182,8 +179,7 @@ function TeamList(props) {
   })}
       </Table.Body>
       </Table>
-      </div>
- 
+      </div> 
       )
 } else {return(<div>.</div>)}
 }
@@ -191,12 +187,12 @@ function TeamList(props) {
 function Batters(props) {
   if(props.playerList) {
   return(
-    <div style={{ height:"50vh", overflow: 'scroll'}}>
+    <div style={{ height:"34vh", overflow: 'scroll'}}>
     <Segment>
       <Table compact style={{backgroundColor: 'rgba(0,0,0,0)'}}>
       <Table.Header>
         <Table.Row>         
-          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Player</Table.HeaderCell>          
+          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Batter</Table.HeaderCell>          
           <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Team</Table.HeaderCell>          
           <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>At Bats</Table.HeaderCell>          
           <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Average</Table.HeaderCell>          
@@ -224,11 +220,12 @@ function Batters(props) {
 function Pitchers(props) {
   if(props.pitcherList) {
     return(
+      <div style={{ height: '34vh', overflow: 'scroll'}}>
       <Segment>
       <Table compact style={{backgroundColor: 'rgba(0,0,0,0)'}}>
       <Table.Header>
         <Table.Row>         
-          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Player</Table.HeaderCell>          
+          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Pitcher</Table.HeaderCell>          
           <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Team</Table.HeaderCell>          
           <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Innings</Table.HeaderCell>                   
           <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>ERA</Table.HeaderCell>          
@@ -249,28 +246,28 @@ function Pitchers(props) {
       </Table.Body>
     </Table>
     </Segment>
+    </div>
         )
     } else {return(<div></div>)}
 }
 function Stats(props) {
+  function HandleClick(tm, yr, dv, cl, ba, pi) {
+   props.saveStats(tm, yr, dv, cl, ba, pi)
+  }
+
   if(props.synthStats && props.selectedMiLBTeam.name){
 return(
   <div>
   <Segment>
     <Statistic.Group>
-  <Image src={props.selectedMiLBTeam.logo} width={180} height={160}/>
+  <Image src={props.selectedMiLBTeam.logo} width={220} height={180}/>
         <Statistic size='mini'>     
         <Statistic.Value style={{color: props.selectedMiLBTeam.color}}>{props.selectedMiLBTeam.name}</Statistic.Value>         
       </Statistic>
-
-
-      <Statistic size='mini'>
-     
+      <Statistic size='mini'>    
         <Statistic.Value>{props.selectedYear}</Statistic.Value> 
         <Statistic.Label>Year</Statistic.Label>       
       </Statistic>
-
-
       <Statistic size='mini'>
         <Statistic.Value>{props.synthStats.batting.bat.AB}</Statistic.Value> 
         <Statistic.Label>At Bats</Statistic.Label>       
@@ -290,14 +287,16 @@ return(
         <Statistic.Label>ERA</Statistic.Label>       
       </Statistic>
     </Statistic.Group>
+     <Button onClick={() => HandleClick(props.selectedMiLBTeam, props.selectedYear, props.selectedDivision.display, props.selectedClass.name, props.synthStats.allPlayers.bat, props.synthStats.allPlayers.pit )} />
     </Segment>
   </div>
     )
   } else {return null}
 }
 function CurrentParams(props) {
+
   return(
-    <Statistic.Group widths="5">
+    <Statistic.Group>
       <Statistic size='small'>
         <Statistic.Label>Minor League Class</Statistic.Label>
         <Statistic.Value>{props.selectedClass.name}</Statistic.Value>        
@@ -310,6 +309,7 @@ function CurrentParams(props) {
         <Statistic.Label>Major League Selection</Statistic.Label>
         <Statistic.Value>{props.selectedDivision.display}</Statistic.Value>        
       </Statistic>
+     
     </Statistic.Group>
     )
 }

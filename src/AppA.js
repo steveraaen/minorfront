@@ -121,7 +121,14 @@ function App() {
                SO: a.SO + b.SO,
                BB: a.BB + b.BB,
                ER: a.ER + b.ER,
-               H: a.H + b.H
+               H: a.H + b.H,
+               GS: a.GS + b.GS,
+               GF: a.GF + b.GF,
+               HBP: a.HBP + b.HBP,
+               W: a.W + b.W,
+               L: a.L + b.L,
+               SV: a.SV + b.SV,
+               G: a.G + b.G,
              })
            )              
           setSynthStats({
@@ -206,7 +213,6 @@ function App() {
         selectedClass={selectedClass}
         />
       </div>
-
     </Collapsible> 
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap', width: '30vw'}}>
         <div style={{fontSize: 36, fontWeight: 600}}>{selectedClass.name}</div>

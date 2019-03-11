@@ -36,6 +36,7 @@ function App() {
     const [radialData, setRadialData] = useState();
     const [synthStats, setSynthStats] = useState();
     const [selectedMiLBTeam, setSelectedMiLBTeam] = useState();
+    const [statsToDb, setStatsToDb] = useState();
    
     function makeDivs() {
       var uniqueDivisions = allMLB.filter((thing, index, self) =>
@@ -45,7 +46,15 @@ function App() {
     )
   return setAllDivisions({allDivisions: uniqueDivisions})
     }
+    async function saveStats(tm, yr, dv, cl, ba, pi) {
 
+        await axios.get('/api/sendStats', { params: {tm, yr, dv, cl, ba, pi}})
+
+            .catch(err => {
+                console.log(err);
+                return null;
+            });
+    }
     async function getMinors() {
         await axios.get('/api/allMinors')
             .then(res => {
@@ -112,7 +121,14 @@ function App() {
            batStats.bat = batterList.data.reduce((a, b) => ({
                AB: a.AB + b.AB,
                H: a.H + b.H,
-               AVG: ((a.H + b.H) /(a.AB + b.AB)).toFixed(3)
+               AVG: ((a.H + b.H) /(a.AB + b.AB)).toFixed(3),
+               SB: a.SB = b.SB,
+               SO: a.SO + b.SO,
+               HR: a.HR + b.HR,
+               HBP: a.HBP + b.HBP,
+               BB: a.BB + b.BB,
+               G: a.G + b.G
+
              })
            )
            var pitStats = {}
@@ -122,13 +138,21 @@ function App() {
                SO: a.SO + b.SO,
                BB: a.BB + b.BB,
                ER: a.ER + b.ER,
-               H: a.H + b.H
+               H: a.H + b.H,
+               SV: a.SV + b.SV,
+               W: a.W + b.W,
+               L: a.L + b.L,
+               G: a.G + b.G,
+               GS: a.GS + b.GS,
+               HBP: a.HBP + b.HBP,
+               IBB: a.IBB + b.IBB,
              })
            )              
           setSynthStats({
             synthStats: {
               batting: batStats,
-              pitching: pitStats
+              pitching: pitStats,
+              allPlayers: { ...batStats, ...pitStats}
             }
           })
 
@@ -229,8 +253,12 @@ function App() {
             {...synthStats} 
             selectedMiLBTeam={selectedMiLBTeam} 
             selectedYear={selectedYear}
+            setStatsToDb={setStatsToDb}
+            saveStats={saveStats}
+            selectedDivision={selectedDivision}
+            selectedClass={selectedClass}
             />
-       \</Segment>
+       </Segment>
     </Grid.Column>
   </Grid.Row>
       <Grid.Column mobile={16} tablet={12} computer={5}>  
