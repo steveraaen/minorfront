@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Checkbox, Container, Form, Image, Label, Loader, Responsive, Statistic, Sticky, Segment, Table } from 'semantic-ui-react'
+import { Button, Card, Checkbox, Container, Form, Grid, Image, Label, Loader, Responsive, Statistic, Sticky, Segment, Table } from 'semantic-ui-react'
 import '../App.css'
 
 function YearPicker(props) {
@@ -167,7 +167,7 @@ function TeamList(props) {
     return(
     <Table.Row 
       onClick={() => {props.getPlayerList(props.selectedClass.regex, tm.franchise, props.selectedYear, tm.name)
-                      props.setSelectedMiLBTeam(({name: tm.name, logo: tm.logo, franchise: tm.franchise, franchiseLogo: tm.franchiseLogo, color: tm.color}))
+                      props.setSelectedMiLBTeam(({name: tm.name, logo: tm.logo, franchise: tm.franchise, franchiseLogo: tm.franchiseLogo, color: tm.color, players: tm.value, division: tm.division}))
                     } }
       key = {idx}
       >              
@@ -251,8 +251,8 @@ function Pitchers(props) {
     } else {return(<div></div>)}
 }
 function Stats(props) {
-  function HandleClick(tm, yr, dv, cl, ba, pi) {
-   props.saveStats(tm, yr, dv, cl, ba, pi)
+  function HandleClick(tm, yr, cl, dv, ba, pi) {
+   props.saveStats(tm, yr, cl, dv, ba, pi)
   }
 
   if(props.synthStats && props.selectedMiLBTeam.name){
@@ -287,14 +287,13 @@ return(
         <Statistic.Label>ERA</Statistic.Label>       
       </Statistic>
     </Statistic.Group>
-     <Button onClick={() => HandleClick(props.selectedMiLBTeam, props.selectedYear, props.selectedDivision.display, props.selectedClass.name, props.synthStats.allPlayers.bat, props.synthStats.allPlayers.pit )} />
+ {/*    <Button onClick={() => HandleClick(props.selectedMiLBTeam, props.selectedYear, props.selectedClass.name, props.selectedMiLBTeam.division, props.synthStats.allPlayers.bat, props.synthStats.allPlayers.pit )} />*/}
     </Segment>
   </div>
     )
   } else {return null}
 }
 function CurrentParams(props) {
-
   return(
     <Statistic.Group>
       <Statistic size='small'>
@@ -313,7 +312,46 @@ function CurrentParams(props) {
     </Statistic.Group>
     )
 }
-export { ClassPicker, CurrentParams, Divisions,  Batters, Pitchers, Stats, TeamList, YearPicker} ;
+function LeaderBoard(props) {
+  if(props.topTenBatting && props.topTenPitching) {
+
+  return(
+    <Grid>
+      <Grid.Row>
+        {props.topTenBatting.map((tarr, ix) => {
+          return(
+            <Grid.Column width="3">
+            {tarr[ix].cl}
+              {tarr.map((tm, idx) => {
+                return(
+                  <div>
+                  {idx + 1}
+                  <Card.Group>
+                    <Card>
+                      <Card.Content>
+                      <Image src={tm.logo} width="100" height="100"/>
+                        <Card.Meta>{tm.yr}</Card.Meta>
+                        <Card.Description>{tm.milbTeam}</Card.Description>
+                          <Statistic>
+                            <Statistic.Value>{tm.bAB}</Statistic.Value>
+                            <Statistic.Label>At Bats</Statistic.Label>
+                          </Statistic>
+                      </Card.Content>
+                    </Card>
+                  </Card.Group>
+                  </div>
+                  )
+              })}
+            </Grid.Column>
+            )
+        })}
+      </Grid.Row>
+    </Grid>
+
+    )
+} else {return null}
+}
+export { ClassPicker, CurrentParams, Divisions, LeaderBoard, Batters, Pitchers, Stats, TeamList, YearPicker} ;
 
 
 

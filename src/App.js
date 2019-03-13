@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Icon, Responsive, Segment } from 'semantic-ui-react'
+import { Card, Grid, Icon, Responsive, Segment } from 'semantic-ui-react'
 
 import axios from 'axios'
 import Collapsible from 'react-collapsible';
-import { ClassPicker, CurrentParams, Batters, Pitchers, TeamList, YearPicker, Divisions, Stats } from './components/Selections.js'
+import { ClassPicker, CurrentParams, Batters, LeaderBoard, Pitchers, TeamList, YearPicker, Divisions, Stats } from './components/Selections.js'
 import MainChart from './components/MainChart'
 
 import './App.css'
@@ -37,7 +37,26 @@ function App() {
     const [synthStats, setSynthStats] = useState();
     const [selectedMiLBTeam, setSelectedMiLBTeam] = useState();
     const [statsToDb, setStatsToDb] = useState();
+    const [topTen, setTopTen] = useState();
    
+    async function getTopTen(cl) {
+      try {
+        
+         const topTenPiPromise = axios('/api/topBatting', { params: { cl } })
+        const topTenBaPromise = axios('/api/topPitching', { params: { cl } })
+        const [topTenBatting, topTenPitching] = await Promise.all([topTenPiPromise, topTenBaPromise]); 
+        console.log(topTenBatting)
+        setTopTen({
+          topTenBatting: topTenBatting.data,
+          topTenPitching: topTenPitching.data
+        })       
+      }
+    catch (e) {
+    console.error(e);  
+  };
+    }
+
+
     function makeDivs() {
       var uniqueDivisions = allMLB.filter((thing, index, self) =>
       index === self.findIndex((t) => (
@@ -114,6 +133,7 @@ function App() {
 
     async function getPlayerList(r, f, y, t) {
       try {
+        console.log(selectedDivision)
         const batterPromise = axios('/api/batterList', { params: { r, f, y, t } })
         const pitcherPromise = axios('/api/pitcherList', { params: { r, f, y, t } })
         const [batterList, pitcherList] = await Promise.all([batterPromise, pitcherPromise]);                    
@@ -182,6 +202,9 @@ function App() {
   };
     }
     useEffect(() => {
+        getTopTen('Triple-A')
+    }, {});
+    useEffect(() => {
         getMinors()
     }, {});
     useEffect(() => {
@@ -194,8 +217,16 @@ function App() {
     return (
 
   <Grid  stackable>
+<Collapsible trigger="See Standings">
+  <Grid.Row>
+    <Grid.Column width="16">
+      <LeaderBoard {...topTen}/>
+      </Grid.Column>
+      </Grid.Row>
+    </Collapsible>
   <Grid.Row>
       <Grid.Column width="16">
+      
         <Segment stacked>
            <Collapsible 
             trigger={<div>Select Minor League Class, Year and Franchise  <Icon name={classIcon} /></div>} 
@@ -257,6 +288,7 @@ function App() {
             saveStats={saveStats}
             selectedDivision={selectedDivision}
             selectedClass={selectedClass}
+            {...radialData}
             />
        </Segment>
     </Grid.Column>
