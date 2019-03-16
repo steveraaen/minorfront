@@ -3,7 +3,7 @@ import { Card, Grid, Icon, Responsive, Segment } from 'semantic-ui-react'
 
 import axios from 'axios'
 import Collapsible from 'react-collapsible';
-import { ClassPicker, CurrentParams, Batters, LeaderBoard, Pitchers, TeamList, YearPicker, Divisions, Stats } from './components/Selections.js'
+import { BestFive, ClassPicker, CurrentParams, Batters, LeaderBoard, Pitchers, TeamList, YearPicker, Divisions, Stats } from './components/Selections.js'
 import MainChart from './components/MainChart'
 
 import './App.css'
@@ -38,17 +38,18 @@ function App() {
     const [selectedMiLBTeam, setSelectedMiLBTeam] = useState();
     const [statsToDb, setStatsToDb] = useState();
     const [topTen, setTopTen] = useState();
+    const [classStats, setClassStats] = useState();
    
     async function getTopTen(cl) {
       try {
         
-         const topTenPiPromise = axios('/api/topBatting', { params: { cl } })
-        const topTenBaPromise = axios('/api/topPitching', { params: { cl } })
-        const [topTenBatting, topTenPitching] = await Promise.all([topTenPiPromise, topTenBaPromise]); 
-        console.log(topTenBatting)
+        
+        const topTenPromise = axios('/api/classSummary', { params: { cl } })
+        const topTen = await topTenPromise; 
+        console.log(topTen)
         setTopTen({
-          topTenBatting: topTenBatting.data,
-          topTenPitching: topTenPitching.data
+          topTenBatting: topTen.data[1],
+          topTenPitching: topTen.data[0]
         })       
       }
     catch (e) {
@@ -88,7 +89,7 @@ function App() {
             });
     }
     async function getBestMinors(p, d, m, y) {
-      console.log(p,m,y)
+      console.log(p,d, m,y)
         await axios.get('/api/bestMinors', { params: { p, d, m, y } })
             .then(res => {
               console.log(res.data)
@@ -202,7 +203,7 @@ function App() {
   };
     }
     useEffect(() => {
-        getTopTen('Triple-A')
+        getTopTen(selectedClass.name)
     }, {});
     useEffect(() => {
         getMinors()
@@ -217,13 +218,13 @@ function App() {
     return (
 
   <Grid  stackable>
-<Collapsible trigger="See Standings">
-  <Grid.Row>
-    <Grid.Column width="16">
-      <LeaderBoard {...topTen}/>
-      </Grid.Column>
-      </Grid.Row>
-    </Collapsible>
+
+      <BestFive
+        topTen={topTen}
+        classStats={classStats} 
+        selectedClass={selectedClass}
+        allMLB={allMLB}/>
+  
   <Grid.Row>
       <Grid.Column width="16">
       
@@ -237,6 +238,7 @@ function App() {
               minors={minors}
               years={years}
               classes={classes} 
+              getTopTen={getTopTen}
               getBestMinors={getBestMinors} 
               selectedClass={selectedClass} 
               selectedYear={selectedYear} 

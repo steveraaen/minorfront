@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Card, Checkbox, Container, Form, Grid, Image, Label, Loader, Responsive, Statistic, Sticky, Segment, Table } from 'semantic-ui-react'
+import { Button, Card, Checkbox, Container, Form, Grid, Header, Image, Label, Loader, Responsive, Statistic, Sticky, Segment, Table } from 'semantic-ui-react'
+import Collapsible from 'react-collapsible';
 import '../App.css'
 
 function YearPicker(props) {
@@ -36,7 +37,9 @@ function ClassPicker(props) {
   function handleChange(e, { value }) {
 console.log(value)
       props.getBestMinors(value.code, props.selectedDivision.value, value.regex, props.selectedYear) 
-      props.setSelectedClass(value)   
+      props.setSelectedClass(value)  
+      props.getTopTen(value.name) 
+      
 }
 
     return ( 
@@ -312,46 +315,107 @@ function CurrentParams(props) {
     </Statistic.Group>
     )
 }
-function LeaderBoard(props) {
-  if(props.topTenBatting && props.topTenPitching) {
+function BestFive(props) {
+  if(props.topTen && props.allMLB && props.selectedClass) {
 
   return(
-    <Grid>
-      <Grid.Row>
-        {props.topTenBatting.map((tarr, ix) => {
-          return(
-            <Grid.Column width="3">
-            {tarr[ix].cl}
-              {tarr.map((tm, idx) => {
-                return(
-                  <div>
-                  {idx + 1}
-                  <Card.Group>
-                    <Card>
-                      <Card.Content>
-                      <Image src={tm.logo} width="100" height="100"/>
-                        <Card.Meta>{tm.yr}</Card.Meta>
-                        <Card.Description>{tm.milbTeam}</Card.Description>
-                          <Statistic>
-                            <Statistic.Value>{tm.bAB}</Statistic.Value>
-                            <Statistic.Label>At Bats</Statistic.Label>
-                          </Statistic>
-                      </Card.Content>
-                    </Card>
-                  </Card.Group>
-                  </div>
-                  )
-              })}
-            </Grid.Column>
-            )
-        })}
-      </Grid.Row>
-    </Grid>
+    <Collapsible trigger="See Standings" triggerStyle={{width: '100vw'}}>
+     <Grid>
+    <Grid.Row>
+      <Grid.Column width={8}>
+        <Header>{props.selectedClass.name}</Header>
+        <Table>
+          <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell></Table.HeaderCell>
+            <Table.HeaderCell></Table.HeaderCell>
+            <Table.HeaderCell></Table.HeaderCell>
+            <Table.HeaderCell>Average</Table.HeaderCell>
+            <Table.HeaderCell>Home Runs</Table.HeaderCell>
+            <Table.HeaderCell>Strikeouts</Table.HeaderCell>
+            <Table.HeaderCell>At Bats</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {props.topTen.topTenBatting.map((btm, idx) => {
+            return(
 
+              <Table.Row key={idx}>
+              <Table.Cell>{idx + 1}</Table.Cell>
+              <Table.Cell><Image src={btm.logo} /></Table.Cell>
+                <Table.Cell>
+                  <p style={{fontSize: '.8vw', fontWeight: 600}}>
+                    {btm.milbTeam}
+                   </p>
+                  <p style={{fontSize: '.4vw'}}>
+                    {props.allMLB.map(nm => {
+                      if(nm.teamCode === btm.majteam) {
+                        return nm.teamName
+                      }
+                    })}
+                  </p>
+                </Table.Cell>
+                <Table.Cell>{btm.bBA}</Table.Cell>
+                <Table.Cell>{btm.bHR}</Table.Cell>
+                <Table.Cell>{btm.bSO}</Table.Cell>
+                <Table.Cell>{btm.bBA}</Table.Cell>
+              </Table.Row>
+              )
+          })}
+        </Table.Body>
+        </Table>
+      </Grid.Column>
+      <Grid.Column width={8}>
+<Header>{props.selectedClass.name}</Header>
+        <Table>
+          <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell></Table.HeaderCell>
+            <Table.HeaderCell></Table.HeaderCell>
+            <Table.HeaderCell></Table.HeaderCell>
+            <Table.HeaderCell>ERA</Table.HeaderCell>
+            <Table.HeaderCell>Wins</Table.HeaderCell>
+            <Table.HeaderCell>Losses</Table.HeaderCell>
+            <Table.HeaderCell>Saves</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {props.topTen.topTenPitching.map((ptm, idx) => {
+            return(
+
+              <Table.Row key={idx}>
+              <Table.Cell>{idx + 1}</Table.Cell>
+              <Table.Cell><Image src={ptm.logo} /></Table.Cell>
+                <Table.Cell>
+                  <p style={{fontSize: '.8vw', fontWeight: 600}}>
+                    {ptm.milbTeam}
+                   </p>
+                  <p style={{fontSize: '.4vw'}}>
+                    {props.allMLB.map(nm => {
+                      if(nm.teamCode === ptm.majteam) {
+                        return nm.teamName
+                      }
+                    })}
+                  </p>
+                </Table.Cell>
+                <Table.Cell>{ptm.pER}</Table.Cell>
+                <Table.Cell>{ptm.pW}</Table.Cell>
+                <Table.Cell>{ptm.pL}</Table.Cell>
+                <Table.Cell>{ptm.pSV}</Table.Cell>
+              </Table.Row>
+              )
+          })}
+        </Table.Body>
+        </Table>
+      </Grid.Column>
+    </Grid.Row>       
+     </Grid>
+    </Collapsible>
     )
-} else {return null}
+} else {return <div>...</div>}
 }
-export { ClassPicker, CurrentParams, Divisions, LeaderBoard, Batters, Pitchers, Stats, TeamList, YearPicker} ;
+
+export { BestFive, ClassPicker, CurrentParams, Divisions, Batters, Pitchers, Stats, TeamList, YearPicker} ;
 
 
 
