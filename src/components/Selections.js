@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Checkbox, Container, Form, Grid, Header, Image, Label, Loader, Responsive, Statistic, Sticky, Segment, Table } from 'semantic-ui-react'
+import { Button, Card, Checkbox, Container, Divider, Form, Grid, Header, Image, Label, Loader, Responsive, Statistic, Sticky, Segment, Table } from 'semantic-ui-react'
 import Collapsible from 'react-collapsible';
 import '../App.css'
 
@@ -44,6 +44,7 @@ console.log(value)
 
     return ( 
     <div> 
+
       <Segment> 
         <Form.Group>
         { props.classes.map((cl, idx) => {
@@ -150,7 +151,7 @@ function TeamList(props) {
   if(props.radialData) {
     return( 
       <div style={{ height: '68vh', overflow: 'scroll'}}>
-      <Table  style={{backgroundColor: 'rgba(0,0,0,0)'}}>
+      <Table  selectable compact basic="very">
       <Table.Header sticky="true">
         <Table.Row>                   
               
@@ -176,7 +177,7 @@ function TeamList(props) {
       >              
           <Table.Cell style={{color: tm.color, fontSize: 30, fontWeight: 'bold', width: 24, overflow: 'hidden', textOverflow: 'ellipsis'}}>{tm.name}</Table.Cell>
           <Table.Cell style={{color: 'black', fontSize: 30, fontWeight: 'bold', width: 20}}>{tm.value}</Table.Cell>
-          <Table.Cell style={{width: 10}}><img alt="team franchise logo" width={120} height={90} src={tm.franchiseLogo} /></Table.Cell>
+          <Table.Cell style={{width: 10}}><img alt="team franchise logo" width={100} height={80} src={tm.franchiseLogo} /></Table.Cell>
     </Table.Row>
       )
   })}
@@ -320,11 +321,13 @@ function BestFive(props) {
 
   return(
     <Collapsible trigger="See Standings" triggerStyle={{width: '100vw'}}>
-     <Grid>
+    
+     <Grid padded="vertically">
     <Grid.Row>
-      <Grid.Column width={8}>
-        <Header>{props.selectedClass.name}</Header>
-        <Table>
+    <Segment style={{marginTop: 2, height: 1100}}>
+      <Grid.Column width={4}>
+        <Header>{props.selectedClass.name} Batting</Header>
+        <Table selectable compact striped>
           <Table.Header>
           <Table.Row>
             <Table.HeaderCell></Table.HeaderCell>
@@ -340,10 +343,16 @@ function BestFive(props) {
           {props.topTen.topTenBatting.map((btm, idx) => {
             return(
 
-              <Table.Row key={idx}>
-              <Table.Cell>{idx + 1}</Table.Cell>
-              <Table.Cell><Image src={btm.logo} /></Table.Cell>
-                <Table.Cell>
+              <Table.Row 
+                    onClick={() => {props.getPlayerList(props.selectedClass.regex, btm.majteam, btm.yr, btm.milbTeam)
+                      props.setSelectedMiLBTeam(({name: btm.milbTeam, logo: btm.logo, franchise: btm.majteam, franchiseLogo: btm.franchiseLogo, color: btm.color}))
+                      props.setSelectedYear(btm.yr)
+                    } }
+                     key={idx}>
+              <Table.Cell value={btm}>{idx + 1}</Table.Cell>
+              <Table.Cell value={btm}><Image src={btm.logo} /></Table.Cell>
+                <Table.Cell value={btm}>
+                  <p style={{fontSize: '.8vw', fontWeight: 600}}>{btm.yr}</p>
                   <p style={{fontSize: '.8vw', fontWeight: 600}}>
                     {btm.milbTeam}
                    </p>
@@ -355,19 +364,21 @@ function BestFive(props) {
                     })}
                   </p>
                 </Table.Cell>
-                <Table.Cell>{btm.bBA}</Table.Cell>
-                <Table.Cell>{btm.bHR}</Table.Cell>
-                <Table.Cell>{btm.bSO}</Table.Cell>
-                <Table.Cell>{btm.bBA}</Table.Cell>
+                <Table.Cell value={btm}>{btm.bBA}</Table.Cell>
+                <Table.Cell value={btm}>{btm.bHR}</Table.Cell>
+                <Table.Cell value={btm}>{btm.bSO}</Table.Cell>
+                <Table.Cell value={btm}>{btm.bBA}</Table.Cell>
               </Table.Row>
               )
           })}
         </Table.Body>
         </Table>
       </Grid.Column>
-      <Grid.Column width={8}>
-<Header>{props.selectedClass.name}</Header>
-        <Table>
+      </Segment>
+      <Segment style={{marginTop: 2, height: 900}}>
+      <Grid.Column  width={4}>
+<Header>{props.selectedClass.name} Pitching</Header>
+        <Table  compact striped >
           <Table.Header>
           <Table.Row>
             <Table.HeaderCell></Table.HeaderCell>
@@ -387,6 +398,7 @@ function BestFive(props) {
               <Table.Cell>{idx + 1}</Table.Cell>
               <Table.Cell><Image src={ptm.logo} /></Table.Cell>
                 <Table.Cell>
+                <p style={{fontSize: '.8vw', fontWeight: 600}}>{ptm.yr}</p>
                   <p style={{fontSize: '.8vw', fontWeight: 600}}>
                     {ptm.milbTeam}
                    </p>
@@ -408,8 +420,10 @@ function BestFive(props) {
         </Table.Body>
         </Table>
       </Grid.Column>
+      </Segment>
     </Grid.Row>       
      </Grid>
+
     </Collapsible>
     )
 } else {return <div>...</div>}

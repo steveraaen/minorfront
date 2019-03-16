@@ -134,7 +134,6 @@ function App() {
 
     async function getPlayerList(r, f, y, t) {
       try {
-        console.log(selectedDivision)
         const batterPromise = axios('/api/batterList', { params: { r, f, y, t } })
         const pitcherPromise = axios('/api/pitcherList', { params: { r, f, y, t } })
         const [batterList, pitcherList] = await Promise.all([batterPromise, pitcherPromise]);                    
@@ -223,7 +222,11 @@ function App() {
         topTen={topTen}
         classStats={classStats} 
         selectedClass={selectedClass}
-        allMLB={allMLB}/>
+        allMLB={allMLB}
+        setSelectedMiLBTeam={setSelectedMiLBTeam}
+        getPlayerList={getPlayerList}
+        selectedYear={selectedYear}
+        />
   
   <Grid.Row>
       <Grid.Column width="16">
@@ -295,28 +298,16 @@ function App() {
        </Segment>
     </Grid.Column>
   </Grid.Row>
-      <Grid.Column mobile={16} tablet={12} computer={5}>  
-            
-        <MainChart 
-         {...radialData}
-         {...bestMinors} 
-         allMLB={allMLB} 
-         selectedClass={selectedClass}
-         selectedYear={selectedYear} 
-         getBestMinors={getBestMinors}
-         />  
-          
-      </Grid.Column>
-      <Grid.Column width="5">
-      <TeamList 
-       {...radialData}
-       {...bestMinors} 
-       allMLB={allMLB} 
-       selectedYear={selectedYear} 
-       selectedClass={selectedClass} 
-       playerList={playerList} 
-       getPlayerList={getPlayerList}
-       setSelectedMiLBTeam={setSelectedMiLBTeam} 
+      <Grid.Column width="10">  
+      <BestFive
+        topTen={topTen}
+        classStats={classStats} 
+        selectedClass={selectedClass}
+        allMLB={allMLB}
+        setSelectedMiLBTeam={setSelectedMiLBTeam}
+        getPlayerList={getPlayerList}
+        selectedYear={selectedYear}
+        setSelectedYear={setSelectedYear}
         />
       </Grid.Column>
       <Grid.Column width="6">
