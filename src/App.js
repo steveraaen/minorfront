@@ -303,7 +303,7 @@ function initialSelectedMilb() {
 
       <Grid.Column width="10">  
       <BestFive
-        isActive={isActive} 
+        {...isActive} 
         setIsActive={setIsActive}
         topTen={topTen}
         classStats={classStats} 

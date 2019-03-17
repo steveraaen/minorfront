@@ -319,25 +319,19 @@ function BestFive(props) {
 
   if(props.topTen && props.allMLB && props.selectedClass && props.selectedMiLBTeam) {
     useEffect(() => {
-      console.log(props.topTen)
        props.setSelectedMiLBTeam({name: props.topTen.topTenBatting[0].milbTeam, logo: props.topTen.topTenBatting[0].logo, franchise: props.topTen.topTenBatting[0].majteam, franchiseLogo: props.topTen.topTenBatting[0].franchiseLogo, color: props.topTen.topTenBatting[0].color})
        props.getPlayerList(props.selectedClass.regex, props.topTen.topTenBatting[0].majteam, props.topTen.topTenBatting[0].yr, props.topTen.topTenBatting[0].milbTeam)
         props.setSelectedYear(props.topTen.topTenBatting[0].yr) 
     }, {})
 
-   const handleClick = (t, m) => { 
-
-        props.getPlayerList(props.selectedClass.regex, t.majteam, t.yr, t.milbTeam)
-        props.setSelectedMiLBTeam({name: t.milbTeam, logo: t.logo, franchise: t.majteam, franchiseLogo: t.franchiseLogo, color: t.color})
-        props.setSelectedYear(t.yr) 
-             console.log(t)
-     console.log(m)
+   const handleClick = (e) => { 
+console.log(e)
+        props.getPlayerList(props.selectedClass.regex, e.majteam, e.yr, e.milbTeam)
+        props.setSelectedMiLBTeam({name: e.milbTeam, logo: e.logo, franchise: e.majteam, franchiseLogo: e.franchiseLogo, color: e.color, t_id: e.id})
+        props.setSelectedYear(e.yr) 
    }
-
-
   return(
-    <Collapsible open trigger="See Standings" triggerStyle={{width: '100vw'}}>
-    
+    <Collapsible open trigger="See Standings" triggerStyle={{width: '100vw'}}>    
      <Grid padded="vertically">
     <Grid.Row>
     <Segment style={{marginTop: 2, height: 1100}}>
@@ -357,19 +351,18 @@ function BestFive(props) {
         </Table.Header>
         <Table.Body>
           {props.topTen.topTenBatting.map((btm, idx) => {
-
+            btm.id=idx
             return(
 
-              <Table.Row
-           
-                    onClick={() => {  
-                       
- 
-                      handleClick(btm, props.selectedMiLBTeam)                  
-                    } }
-                 
+              <Table.Row                 
+                    onClick={(e) => {   
+                      handleClick(btm, props.selectedMiLBTeam)                                  
+                    }}   
+                    active={props.selectedMiLBTeam.t_id === idx}             
                      key={idx}>
-              <Table.Cell value={btm}>{idx + 1}</Table.Cell>
+              <Table.Cell>
+              {idx + 1}
+              </Table.Cell>
               <Table.Cell value={btm}><Image src={btm.logo} /></Table.Cell>
                 <Table.Cell value={btm}>
                   <p style={{fontSize: '.8vw', fontWeight: 600}}>{btm.yr}</p>
@@ -411,11 +404,17 @@ function BestFive(props) {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {props.topTen.topTenPitching.map((ptm, idx) => {
+          {props.topTen.topTenPitching.map((ptm, ix) => {
+            ptm.id=ix + 5
             return(
 
-              <Table.Row key={idx}>
-              <Table.Cell>{idx + 1}</Table.Cell>
+              <Table.Row                 
+                    onClick={(e) => {   
+                      handleClick(ptm, props.selectedMiLBTeam)                                  
+                    }}   
+                    active={props.selectedMiLBTeam.t_id === ix + 5}             
+                     key={ix}>
+              <Table.Cell>{ix + 1}</Table.Cell>
               <Table.Cell><Image src={ptm.logo} /></Table.Cell>
                 <Table.Cell>
                 <p style={{fontSize: '.8vw', fontWeight: 600}}>{ptm.yr}</p>
