@@ -39,18 +39,20 @@ function App() {
     const [statsToDb, setStatsToDb] = useState();
     const [topTen, setTopTen] = useState();
     const [classStats, setClassStats] = useState();
+    const [isActive, setIsActive] = useState(false);
+  
+ 
    
     async function getTopTen(cl) {
       try {
-        
-        
+               
         const topTenPromise = axios('/api/classSummary', { params: { cl } })
         const topTen = await topTenPromise; 
         console.log(topTen)
         setTopTen({
           topTenBatting: topTen.data[1],
           topTenPitching: topTen.data[0]
-        })       
+        }) 
       }
     catch (e) {
     console.error(e);  
@@ -131,6 +133,11 @@ function App() {
                 return null;
             });
     }
+function initialSelectedMilb() {
+  if(topTen) {
+  console.log(topTen)
+  }
+}
 
     async function getPlayerList(r, f, y, t) {
       try {
@@ -201,6 +208,8 @@ function App() {
     console.error(e);  
   };
     }
+    
+
     useEffect(() => {
         getTopTen(selectedClass.name)
     }, {});
@@ -213,21 +222,14 @@ function App() {
     useEffect(() => {
         getBestMinors(selectedClass.code, selectedDivision.value, selectedClass.regex, selectedYear)
     }, {});
+       useEffect(() => {
+         initialSelectedMilb()
+    }, {});
+ 
 
     return (
 
   <Grid  stackable>
-
-      <BestFive
-        topTen={topTen}
-        classStats={classStats} 
-        selectedClass={selectedClass}
-        allMLB={allMLB}
-        setSelectedMiLBTeam={setSelectedMiLBTeam}
-        getPlayerList={getPlayerList}
-        selectedYear={selectedYear}
-        />
-  
   <Grid.Row>
       <Grid.Column width="16">
       
@@ -298,8 +300,11 @@ function App() {
        </Segment>
     </Grid.Column>
   </Grid.Row>
+
       <Grid.Column width="10">  
       <BestFive
+        isActive={isActive} 
+        setIsActive={setIsActive}
         topTen={topTen}
         classStats={classStats} 
         selectedClass={selectedClass}
@@ -308,6 +313,7 @@ function App() {
         getPlayerList={getPlayerList}
         selectedYear={selectedYear}
         setSelectedYear={setSelectedYear}
+        selectedMiLBTeam={selectedMiLBTeam}
         />
       </Grid.Column>
       <Grid.Column width="6">

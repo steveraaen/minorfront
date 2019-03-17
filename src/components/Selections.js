@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Card, Checkbox, Container, Divider, Form, Grid, Header, Image, Label, Loader, Responsive, Statistic, Sticky, Segment, Table } from 'semantic-ui-react'
 import Collapsible from 'react-collapsible';
 import '../App.css'
@@ -41,7 +41,6 @@ console.log(value)
       props.getTopTen(value.name) 
       
 }
-
     return ( 
     <div> 
 
@@ -256,7 +255,7 @@ function Pitchers(props) {
 }
 function Stats(props) {
   function HandleClick(tm, yr, cl, dv, ba, pi) {
-   props.saveStats(tm, yr, cl, dv, ba, pi)
+/*   props.saveStats(tm, yr, cl, dv, ba, pi)*/
   }
 
   if(props.synthStats && props.selectedMiLBTeam.name){
@@ -317,10 +316,27 @@ function CurrentParams(props) {
     )
 }
 function BestFive(props) {
-  if(props.topTen && props.allMLB && props.selectedClass) {
+
+  if(props.topTen && props.allMLB && props.selectedClass && props.selectedMiLBTeam) {
+    useEffect(() => {
+      console.log(props.topTen)
+       props.setSelectedMiLBTeam({name: props.topTen.topTenBatting[0].milbTeam, logo: props.topTen.topTenBatting[0].logo, franchise: props.topTen.topTenBatting[0].majteam, franchiseLogo: props.topTen.topTenBatting[0].franchiseLogo, color: props.topTen.topTenBatting[0].color})
+       props.getPlayerList(props.selectedClass.regex, props.topTen.topTenBatting[0].majteam, props.topTen.topTenBatting[0].yr, props.topTen.topTenBatting[0].milbTeam)
+        props.setSelectedYear(props.topTen.topTenBatting[0].yr) 
+    }, {})
+
+   const handleClick = (t, m) => { 
+
+        props.getPlayerList(props.selectedClass.regex, t.majteam, t.yr, t.milbTeam)
+        props.setSelectedMiLBTeam({name: t.milbTeam, logo: t.logo, franchise: t.majteam, franchiseLogo: t.franchiseLogo, color: t.color})
+        props.setSelectedYear(t.yr) 
+             console.log(t)
+     console.log(m)
+   }
+
 
   return(
-    <Collapsible trigger="See Standings" triggerStyle={{width: '100vw'}}>
+    <Collapsible open trigger="See Standings" triggerStyle={{width: '100vw'}}>
     
      <Grid padded="vertically">
     <Grid.Row>
@@ -341,13 +357,17 @@ function BestFive(props) {
         </Table.Header>
         <Table.Body>
           {props.topTen.topTenBatting.map((btm, idx) => {
+
             return(
 
-              <Table.Row 
-                    onClick={() => {props.getPlayerList(props.selectedClass.regex, btm.majteam, btm.yr, btm.milbTeam)
-                      props.setSelectedMiLBTeam(({name: btm.milbTeam, logo: btm.logo, franchise: btm.majteam, franchiseLogo: btm.franchiseLogo, color: btm.color}))
-                      props.setSelectedYear(btm.yr)
+              <Table.Row
+           
+                    onClick={() => {  
+                       
+ 
+                      handleClick(btm, props.selectedMiLBTeam)                  
                     } }
+                 
                      key={idx}>
               <Table.Cell value={btm}>{idx + 1}</Table.Cell>
               <Table.Cell value={btm}><Image src={btm.logo} /></Table.Cell>
