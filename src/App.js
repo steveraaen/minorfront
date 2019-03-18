@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Grid, Icon, Responsive, Segment } from 'semantic-ui-react'
+import { Grid, Icon,  Segment } from 'semantic-ui-react'
 
 import axios from 'axios'
 import Collapsible from 'react-collapsible';
-import { BestFive, ClassPicker, CurrentParams, Batters, LeaderBoard, Pitchers, TeamList, YearPicker, Divisions, Stats } from './components/Selections.js'
+import { BestFive, ClassPicker, CurrentParams, Batters, Pitchers,  YearPicker, Divisions, Stats } from './components/Selections.js'
 import MainChart from './components/MainChart'
 
 import './App.css'
@@ -12,6 +12,7 @@ import mlbTeams from './mlbTeams.js'
 import leagues from './assets/leagues.js'
 
 const yrs = [
+
     { text: "2013", value: 2013, key: "2013" },
     { text: "2014", value: 2014, key: "2014" },
     { text: "2015", value: 2015, key: "2015" },
@@ -27,12 +28,12 @@ function App() {
     const [years] = useState(yrs);
     const [bestMinors, setBestMinors] = useState();
     const [allMLB] = useState(mlbTeams);
-    const [selectedYear, setSelectedYear] = useState(2013);
+    const [selectedYear, setSelectedYear] = useState("20%");
     const [playerList, setPlayerList] = useState();
     const [pitcherList, setPitcherList] = useState();
     const [classIcon] = useState('angle down');
     const [allDivisions, setAllDivisions] = useState();
-    const [selectedDivision, setSelectedDivision] = useState({value: "L", display: "All Major League Teams"});
+    const [selectedDivision, setSelectedDivision] = useState({value: "%L%", display: "All Major League Teams"});
     const [radialData, setRadialData] = useState();
     const [synthStats, setSynthStats] = useState();
     const [selectedMiLBTeam, setSelectedMiLBTeam] = useState();
@@ -43,10 +44,10 @@ function App() {
   
  
    
-    async function getTopTen(cl) {
+    async function getTopTen(cl, yr, dv) {
       try {
                
-        const topTenPromise = axios('/api/classSummary', { params: { cl } })
+        const topTenPromise = axios('/api/classSummary', { params: { cl, yr, dv } })
         const topTen = await topTenPromise; 
         console.log(topTen)
         setTopTen({
@@ -68,15 +69,13 @@ function App() {
     )
   return setAllDivisions({allDivisions: uniqueDivisions})
     }
-    async function saveStats(tm, yr, dv, cl, ba, pi) {
-
+/*    async function saveStats(tm, yr, dv, cl, ba, pi) {
         await axios.get('/api/sendStats', { params: {tm, yr, dv, cl, ba, pi}})
-
             .catch(err => {
                 console.log(err);
                 return null;
             });
-    }
+    }*/
     async function getMinors() {
         await axios.get('/api/allMinors')
             .then(res => {
@@ -211,7 +210,7 @@ function initialSelectedMilb() {
     
 
     useEffect(() => {
-        getTopTen(selectedClass.name)
+        getTopTen(selectedClass.name, selectedYear, selectedDivision.value)
     }, {});
     useEffect(() => {
         getMinors()
@@ -244,31 +243,42 @@ function initialSelectedMilb() {
               years={years}
               classes={classes} 
               getTopTen={getTopTen}
+              getPlayerList={getPlayerList} 
               getBestMinors={getBestMinors} 
               selectedClass={selectedClass} 
               selectedYear={selectedYear} 
               selectedDivision={selectedDivision} 
               setSelectedYear={setSelectedYear}
               setSelectedClass={setSelectedClass}
+              selectedMiLBTeam={selectedMiLBTeam}
+              setSelectedMiLBTeam={setSelectedMiLBTeam}
               />        
             <YearPicker 
               years={years} 
               classes={classes} 
-              getBestMinors={getBestMinors} 
+              getBestMinors={getBestMinors}
+              getTopTen={getTopTen}
+              getPlayerList={getPlayerList}  
               selectedClass={selectedClass} 
               setSelectedClass={setSelectedClass} 
               selectedYear={selectedYear} 
               selectedDivision={selectedDivision} 
               setSelectedYear={setSelectedYear} 
+              selectedMiLBTeam={selectedMiLBTeam}
+              setSelectedMiLBTeam={setSelectedMiLBTeam}
               />            
             <Divisions 
               setSelectedDivision={setSelectedDivision} 
               getBestMinors={getBestMinors} 
               allMLB={allMLB} {...allDivisions} 
-              setSelectedDivision={setSelectedDivision} 
               selectedYear={selectedYear} 
               selectedDivision={selectedDivision} 
               selectedClass={selectedClass}
+              selectedMiLBTeam={selectedMiLBTeam}
+              getPlayerList={getPlayerList}  
+              setSelectedMiLBTeam={setSelectedMiLBTeam}
+              getTopTen={getTopTen}
+              topTen={topTen}
               />
             </div>
           </Collapsible> 
@@ -292,7 +302,6 @@ function initialSelectedMilb() {
             selectedMiLBTeam={selectedMiLBTeam} 
             selectedYear={selectedYear}
             setStatsToDb={setStatsToDb}
-            saveStats={saveStats}
             selectedDivision={selectedDivision}
             selectedClass={selectedClass}
             {...radialData}
@@ -300,7 +309,7 @@ function initialSelectedMilb() {
        </Segment>
     </Grid.Column>
   </Grid.Row>
-
+<Collapsible open trigger="See Standings" triggerStyle={{width: '100vw'}}>  
       <Grid.Column width="10">  
       <BestFive
         {...isActive} 
@@ -316,6 +325,8 @@ function initialSelectedMilb() {
         selectedMiLBTeam={selectedMiLBTeam}
         />
       </Grid.Column>
+          </Collapsible>
+          <Collapsible open trigger="See Standings" triggerStyle={{width: '100vw'}}>
       <Grid.Column width="6">
         <Grid.Row>
           <Grid.Column width="3">
@@ -332,8 +343,10 @@ function initialSelectedMilb() {
               synthStats={synthStats}
               />
           </Grid.Column>
+          
         </Grid.Row>
       </Grid.Column>
+</Collapsible>
   </Grid>
     );
 }

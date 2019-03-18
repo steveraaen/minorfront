@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Card, Checkbox, Container, Divider, Form, Grid, Header, Image, Label, Loader, Responsive, Statistic, Sticky, Segment, Table } from 'semantic-ui-react'
+import React, { useEffect } from 'react';
+import {  Form, Grid, Header, Image, Loader,  Statistic,  Segment, Table } from 'semantic-ui-react'
 import Collapsible from 'react-collapsible';
 import '../App.css'
 
@@ -7,10 +7,23 @@ function YearPicker(props) {
   function handleChange(e, { value }) {
 console.log(value)
       props.getBestMinors(props.selectedClass.code, props.selectedDivision.value, props.selectedClass.regex, value) 
-      props.setSelectedYear(value)   
+      props.setSelectedYear(value) 
+      props.getTopTen(props.selectedClass.name, value, props.selectedDivision.value) 
 }
   return(
     <div>  
+         <Segment style={{alignItems: 'center'}}>
+       <Form.Group> 
+        <Form.Checkbox
+         toggle
+          key={'allYears'}
+          label={"All Years"}
+          value={"20%"}          
+          onChange={handleChange}
+          checked={props.selectedYear === "20%"}
+        />
+        </Form.Group>
+    </Segment>
     <Segment> 
         <Form.Group>
         { props.years.map((yr, idx) => {
@@ -36,9 +49,9 @@ console.log(value)
 function ClassPicker(props) {
   function handleChange(e, { value }) {
 console.log(value)
-      props.getBestMinors(value.code, props.selectedDivision.value, value.regex, props.selectedYear) 
-      props.setSelectedClass(value)  
-      props.getTopTen(value.name) 
+/*      props.getBestMinors(JSON.parse(value).code, props.selectedDivision.value, JSON.parse(value).regex, props.selectedYear) 
+*/      props.setSelectedClass(value)  
+      props.getTopTen(value.name, props.selectedYear, props.selectedDivision.value) 
       
 }
     return ( 
@@ -68,9 +81,10 @@ console.log(value)
 
 function Divisions(props) {
     function handleChange(e, {value, label}) { 
-      console.log(label)
+      console.log(value)
       props.setSelectedDivision({value: value, display: label}) 
       props.getBestMinors(props.selectedClass.code, value, props.selectedClass.regex, props.selectedYear) 
+      props.getTopTen(props.selectedClass.name, props.selectedYear, value) 
 }
   if(props.allDivisions) {
   return(
@@ -81,9 +95,9 @@ function Divisions(props) {
          toggle
           key={'allMajors'}
           label={"All Major Leagues"}
-          value={"L"}          
+          value={"%L%"}          
           onChange={handleChange}
-          checked={props.selectedDivision.value === "L"}
+          checked={props.selectedDivision.value === "%L%"}
         />
         </Form.Group>
     </Segment>
@@ -94,9 +108,9 @@ function Divisions(props) {
          toggle
           key={'allAL'}
           label={"All American League"}
-          value={"A"}          
+          value={"A%%"}          
           onChange={handleChange}
-          checked={props.selectedDivision.value === "A"}
+          checked={props.selectedDivision.value === "A%%"}
         />
        {props.allDivisions.map((dv, idx) => {
          if(dv.league === "ALE" || dv.league === "ALC" || dv.league === "ALW") {
@@ -110,7 +124,7 @@ function Divisions(props) {
           onChange={handleChange}
           checked={props.selectedDivision.value === dv.league}
         />
-           )} 
+           )} else {return null}
        })}     
     </Form.Group>
     </Segment>
@@ -120,9 +134,9 @@ function Divisions(props) {
          toggle
           key={'allNL'}
           label={"All National League"}
-          value={"N"}          
+          value={"N%%"}          
           onChange={handleChange}
-          checked={props.selectedDivision.value === "N"}
+          checked={props.selectedDivision.value === "N%%"}
         />
        {props.allDivisions.map((dv, idx) => {
          if(dv.league === "NLE" || dv.league === "NLC" || dv.league === "NLW") {
@@ -136,7 +150,7 @@ function Divisions(props) {
           onChange={handleChange}
           checked={props.selectedDivision.value === dv.league}
         />
-           )}
+           )} else {return null}
        })}     
     </Form.Group>
     </Segment>
@@ -190,25 +204,26 @@ function TeamList(props) {
 function Batters(props) {
   if(props.playerList) {
   return(
-    <div style={{ height:"34vh", overflow: 'scroll'}}>
-    <Segment>
+    <div>
+    <Segment style={{ marginTop: 2, height:"40vh", overflow: 'scroll'}}>
+    <Header>There are xx 2018 MLB Players from the xxxxxxxxxxxxxxxxxxxxx</Header>
       <Table compact style={{backgroundColor: 'rgba(0,0,0,0)'}}>
       <Table.Header>
         <Table.Row>         
-          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Batter</Table.HeaderCell>          
-          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Team</Table.HeaderCell>          
-          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>At Bats</Table.HeaderCell>          
-          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Average</Table.HeaderCell>          
+          <Table.HeaderCell>Batter</Table.HeaderCell>          
+          <Table.HeaderCell>Team</Table.HeaderCell>          
+          <Table.HeaderCell>At Bats</Table.HeaderCell>          
+          <Table.HeaderCell>Average</Table.HeaderCell>          
         </Table.Row>
       </Table.Header>
       <Table.Body>
       {props.playerList.map((pl, idx) => {
         return(
         <Table.Row key={idx}>
-          <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{pl.playerName}</Table.Cell>
-          <Table.Cell style={{fontSize: 30, fontWeight: 'bold', color: pl.color}}>{pl.teamID}</Table.Cell>
-          <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{pl.AB}</Table.Cell>
-          <Table.Cell style={{fontSize: 30, fontWeight: 'bold'}}>{parseFloat(pl.AVG).toFixed(3)}</Table.Cell>
+          <Table.Cell >{pl.playerName}</Table.Cell>
+          <Table.Cell style={{ color: pl.color}}>{pl.teamID}</Table.Cell>
+          <Table.Cell >{pl.AB}</Table.Cell>
+          <Table.Cell >{parseFloat(pl.AVG).toFixed(3)}</Table.Cell>
         </Table.Row>
         )
         })
@@ -223,9 +238,9 @@ function Batters(props) {
 function Pitchers(props) {
   if(props.pitcherList) {
     return(
-      <div style={{ height: '34vh', overflow: 'scroll'}}>
+      <div style={{ marginTop: 50, height: '34vh', overflow: 'scroll'}}>
       <Segment>
-      <Table compact style={{backgroundColor: 'rgba(0,0,0,0)'}}>
+      <Table compact  selectable striped >
       <Table.Header>
         <Table.Row>         
           <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>Pitcher</Table.HeaderCell>          
@@ -254,9 +269,7 @@ function Pitchers(props) {
     } else {return(<div></div>)}
 }
 function Stats(props) {
-  function HandleClick(tm, yr, cl, dv, ba, pi) {
-/*   props.saveStats(tm, yr, cl, dv, ba, pi)*/
-  }
+
 
   if(props.synthStats && props.selectedMiLBTeam.name){
 return(
@@ -331,7 +344,7 @@ console.log(e)
         props.setSelectedYear(e.yr) 
    }
   return(
-    <Collapsible open trigger="See Standings" triggerStyle={{width: '100vw'}}>    
+      
      <Grid padded="vertically">
     <Grid.Row>
     <Segment style={{marginTop: 2, height: 1100}}>
@@ -366,14 +379,14 @@ console.log(e)
               <Table.Cell value={btm}><Image src={btm.logo} /></Table.Cell>
                 <Table.Cell value={btm}>
                   <p style={{fontSize: '.8vw', fontWeight: 600}}>{btm.yr}</p>
-                  <p style={{fontSize: '.8vw', fontWeight: 600}}>
+                  <p style={{color: btm.color, fontSize: '.8vw', fontWeight: 600}}>
                     {btm.milbTeam}
                    </p>
                   <p style={{fontSize: '.4vw'}}>
                     {props.allMLB.map(nm => {
                       if(nm.teamCode === btm.majteam) {
                         return nm.teamName
-                      }
+                      } else {return null}
                     })}
                   </p>
                 </Table.Cell>
@@ -418,14 +431,14 @@ console.log(e)
               <Table.Cell><Image src={ptm.logo} /></Table.Cell>
                 <Table.Cell>
                 <p style={{fontSize: '.8vw', fontWeight: 600}}>{ptm.yr}</p>
-                  <p style={{fontSize: '.8vw', fontWeight: 600}}>
+                  <p style={{color: ptm.color, fontSize: '.8vw', fontWeight: 600}}>
                     {ptm.milbTeam}
                    </p>
                   <p style={{fontSize: '.4vw'}}>
                     {props.allMLB.map(nm => {
                       if(nm.teamCode === ptm.majteam) {
                         return nm.teamName
-                      }
+                      } else {return null}
                     })}
                   </p>
                 </Table.Cell>
@@ -443,7 +456,7 @@ console.log(e)
     </Grid.Row>       
      </Grid>
 
-    </Collapsible>
+    
     )
 } else {return <div>...</div>}
 }

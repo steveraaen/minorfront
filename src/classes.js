@@ -1,5 +1,9 @@
 	var classes	= [
-		
+/*			{
+			name: "All Minor League Levels",
+			code: "%",
+			regex: "%"
+			},	*/	
 		{
 			name: "Triple-A",
 			code: "AAA",

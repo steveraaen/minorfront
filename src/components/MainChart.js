@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React from 'react';
 import {RadialBar, RadialBarChart, Tooltip } from 'recharts';
 import { Image } from 'semantic-ui-react'
 import '../App.css'
