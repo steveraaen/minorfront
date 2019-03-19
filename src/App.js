@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Icon,  Segment } from 'semantic-ui-react'
+import { Grid, Header, Icon,  Segment } from 'semantic-ui-react'
 
 import axios from 'axios'
 import Collapsible from 'react-collapsible';
-import { BestFive, ClassPicker, CurrentParams, Batters, Pitchers,  YearPicker, Divisions, Stats } from './components/Selections.js'
+import { BestFive, BestPlayers, ClassPicker, CurrentParams, Batters, Pitchers,  YearPicker, Divisions, Stats } from './components/Selections.js'
 import MainChart from './components/MainChart'
 
 import './App.css'
@@ -186,6 +186,7 @@ function initialSelectedMilb() {
              for(let i = 0; i < allMLB.length; i++) {
                if(plyr.teamID === allMLB[i].teamCode) {
                  plyr.color = allMLB[i].color
+                 plyr.teamName = allMLB[i].teamName
                }
              }
            })
@@ -193,6 +194,7 @@ function initialSelectedMilb() {
              for(let i = 0; i < allMLB.length; i++) {
                if(ptchr.teamID === allMLB[i].teamCode) {
                  ptchr.color = allMLB[i].color
+                 ptchr.teamName = allMLB[i].teamName
                }
              }
            })
@@ -229,12 +231,18 @@ function initialSelectedMilb() {
     return (
 
   <Grid  stackable>
-  <Grid.Row>
+  
+    <Grid.Column width="16">
+      <Header as="h1" style={{fontSize: '4rem',display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>2018 MLB Performance of MiLB Teams (2013-2018)</Header>
+    </Grid.Column>
+ 
+  
       <Grid.Column width="16">
       
         <Segment stacked>
            <Collapsible 
             trigger={<div>Select Minor League Class, Year and Franchise  <Icon name={classIcon} /></div>} 
+            triggerWhenOpen={<div>Click here to close the selection form  <Icon name="angle up" /></div>}
             triggerStyle={{fontSize: 36, padding: 6, margin: 6, borderWidth: 4, borderColor: 'green', borderStyle: 'line'}}
             > 
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', height: 400}} >  
@@ -284,19 +292,11 @@ function initialSelectedMilb() {
           </Collapsible> 
         </Segment>
       </Grid.Column>
-  </Grid.Row>
-  <Grid.Row>
-    <Grid.Column width="5">
-      <Segment>
-      <CurrentParams 
-        allDivisions={allDivisions} 
-        selectedClass={selectedClass} 
-        selectedDivision={selectedDivision}
-        selectedYear={selectedYear}/>
-      </Segment>
-     </Grid.Column>
-     <Grid.Column width="11">
-      <Segment>
+ 
+  
+<Grid stackable style={{borderWidth: '.1vw', borderColor: 'Cornsilk'}}>
+     <Grid.Column width="6">
+
        <Stats  
             {...synthStats} 
             selectedMiLBTeam={selectedMiLBTeam} 
@@ -304,11 +304,18 @@ function initialSelectedMilb() {
             setStatsToDb={setStatsToDb}
             selectedDivision={selectedDivision}
             selectedClass={selectedClass}
+            players={{...pitcherList, ...playerList}}
+            pitcherList={pitcherList}
             {...radialData}
-            />
-       </Segment>
+            />  
     </Grid.Column>
-  </Grid.Row>
+    <Grid.Column width="10">
+      <BestPlayers 
+        players={{...pitcherList, ...playerList}}
+      />
+    </Grid.Column>
+    </Grid>
+ 
 <Collapsible open trigger="See Standings" triggerStyle={{width: '100vw'}}>  
       <Grid.Column width="10">  
       <BestFive
@@ -328,7 +335,7 @@ function initialSelectedMilb() {
           </Collapsible>
           <Collapsible open trigger="See Standings" triggerStyle={{width: '100vw'}}>
       <Grid.Column width="6">
-        <Grid.Row>
+        
           <Grid.Column width="3">
             <Batters  
               {...playerList} 
@@ -344,7 +351,7 @@ function initialSelectedMilb() {
               />
           </Grid.Column>
           
-        </Grid.Row>
+       
       </Grid.Column>
 </Collapsible>
   </Grid>

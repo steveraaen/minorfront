@@ -1,16 +1,11 @@
-	var classes	= [
-/*			{
-			name: "All Minor League Levels",
-			code: "%",
-			regex: "%"
-			},	*/	
+	var classes	= [	
 		{
-			name: "Triple-A",
+			name: "Triple A",
 			code: "AAA",
 			regex: "^AAA,|,AAA,|,AAA$"
 			},
 		{
-			name: "Double-A",
+			name: "Double A",
 			code: "AA",
 			regex: "^AA,|,AA,|,AA$"
 			},
