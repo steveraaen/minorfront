@@ -1,16 +1,8 @@
 body {
- 
+ background-color: cornsilk;
   padding: 2vw;
 }
-.milbList {
-  height: 30vh;
-  overflow: scroll;
-}
+
 .recharts-wrapper {
 	padding-top: -20;
-}
-.ui.table thead tr:first-child > th {
-     position: sticky !important;
-     top: 0;
-     z-index: 2;
 }

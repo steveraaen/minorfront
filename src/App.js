@@ -53,7 +53,8 @@ function App() {
         setTopTen({
           topTenBatting: topTen.data[1],
           topTenPitching: topTen.data[0]
-        }) 
+        })
+
       }
     catch (e) {
     console.error(e);  
@@ -132,13 +133,10 @@ function App() {
                 return null;
             });
     }
-function initialSelectedMilb() {
-  if(topTen) {
-  console.log(topTen)
-  }
-}
+
 
     async function getPlayerList(r, f, y, t) {
+      console.log(r, f, y, t)
       try {
         const batterPromise = axios('/api/batterList', { params: { r, f, y, t } })
         const pitcherPromise = axios('/api/pitcherList', { params: { r, f, y, t } })
@@ -153,7 +151,8 @@ function initialSelectedMilb() {
                HR: a.HR + b.HR,
                HBP: a.HBP + b.HBP,
                BB: a.BB + b.BB,
-               G: a.G + b.G
+               G: a.G + b.G,
+               RBI: a.RBI + b.RBI
 
              })
            )
@@ -223,29 +222,24 @@ function initialSelectedMilb() {
     useEffect(() => {
         getBestMinors(selectedClass.code, selectedDivision.value, selectedClass.regex, selectedYear)
     }, {});
-       useEffect(() => {
-         initialSelectedMilb()
-    }, {});
- 
+
 
     return (
 
-  <Grid  stackable>
-  
-    <Grid.Column width="16">
-      <Header as="h1" style={{fontSize: '4rem',display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>2018 MLB Performance of MiLB Teams (2013-2018)</Header>
+  <Grid  stackable centered>
+<Grid.Row columns={1}>  
+    <Grid.Column >
+      <Header as="h1" style={{fontSize: '1.8rem',display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>2018 MLB Performance of MiLB Teams (2013-2018)</Header>
     </Grid.Column>
- 
-  
-      <Grid.Column width="16">
-      
-        <Segment stacked>
+</Grid.Row>  
+<Grid.Row columns={1}>  
+      <Grid.Column>
            <Collapsible 
             trigger={<div>Select Minor League Class, Year and Franchise  <Icon name={classIcon} /></div>} 
             triggerWhenOpen={<div>Click here to close the selection form  <Icon name="angle up" /></div>}
-            triggerStyle={{fontSize: 36, padding: 6, margin: 6, borderWidth: 4, borderColor: 'green', borderStyle: 'line'}}
+            triggerStyle={{fontSize: '1.2rem', padding: 2, margin: 2}}
             > 
-            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', height: 400}} >  
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', height: 260}} >  
             <ClassPicker
               minors={minors}
               years={years}
@@ -289,14 +283,14 @@ function initialSelectedMilb() {
               topTen={topTen}
               />
             </div>
-          </Collapsible> 
-        </Segment>
+          </Collapsible>   
       </Grid.Column>
- 
-  
-<Grid stackable style={{borderWidth: '.1vw', borderColor: 'Cornsilk'}}>
-     <Grid.Column width="6">
+</Grid.Row>  
+<Grid.Row> 
 
+</Grid.Row>  
+<Grid.Row>
+     <Grid.Column width="8">
        <Stats  
             {...synthStats} 
             selectedMiLBTeam={selectedMiLBTeam} 
@@ -309,15 +303,16 @@ function initialSelectedMilb() {
             {...radialData}
             />  
     </Grid.Column>
-    <Grid.Column width="10">
+    <Grid.Column width="8">
       <BestPlayers 
         players={{...pitcherList, ...playerList}}
       />
     </Grid.Column>
-    </Grid>
- 
-<Collapsible open trigger="See Standings" triggerStyle={{width: '100vw'}}>  
-      <Grid.Column width="10">  
+</Grid.Row> 
+<Collapsible open trigger="See Standings">  
+<Grid>  
+  <Grid.Row>
+     <Grid.Column width="11">  
       <BestFive
         {...isActive} 
         setIsActive={setIsActive}
@@ -332,27 +327,22 @@ function initialSelectedMilb() {
         selectedMiLBTeam={selectedMiLBTeam}
         />
       </Grid.Column>
-          </Collapsible>
-          <Collapsible open trigger="See Standings" triggerStyle={{width: '100vw'}}>
-      <Grid.Column width="6">
         
-          <Grid.Column width="3">
+          <Grid.Column width="5">
             <Batters  
               {...playerList} 
               selectedMiLBTeam={selectedMiLBTeam} 
               synthStats={synthStats}
               />
-          </Grid.Column>
-          <Grid.Column width="3">
+
             <Pitchers 
               {...pitcherList} 
               selectedMiLBTeam={selectedMiLBTeam} 
               synthStats={synthStats}
               />
           </Grid.Column>
-          
-       
-      </Grid.Column>
+        </Grid.Row>
+        </Grid>
 </Collapsible>
   </Grid>
     );

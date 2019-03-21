@@ -1,30 +1,36 @@
-	var classes	= [	
+	var classes	= [
 		{
+			displayName: "Triple A",
 			name: "Triple A",
-			code: "AAA",
+			code: "Triple A",
 			regex: "^AAA,|,AAA,|,AAA$"
 			},
 		{
+			displayName: "Double A",
 			name: "Double A",
-			code: "AA",
+			code: "Double A",
 			regex: "^AA,|,AA,|,AA$"
 			},
 			{
+			displayName: "Class A Advanced",
 			name: "Class A Advanced",
-			code: "A+",
+			code: "Class A Advanced",
 			regex: "^A+,|,A+,|,A+$"
 			},
 		{
+			displayName: "Class A",
 			name: "Class A",
-			code: "A",
+			code: "Class A",
 			regex: "^A,|,A,|,A$"
 			},
 		{
+			displayName: "Class A Short",
 			name: "Class A Short",
-			code: "A-",
+			code: "Class A Short",
 			regex: "^A-,|,A-,|,A-$"
 			},
 		{
+			displayName: "Rookie",
 			name: "Rookie",
 			code: "Rk",
 			regex: "^Rk,|,Rk,|,Rk$"
