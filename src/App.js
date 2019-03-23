@@ -23,7 +23,7 @@ const yrs = [
 
 function App() {
    /* const [allMiLB, setAllMiLB] = useState(allMinorTeams);*/
-    const [selectedClass, setSelectedClass] = useState(classes[0]);
+    const [selectedClass, setSelectedClass] = useState(classes[1]);
     const [minors, setMinors] = useState({});
     const [years] = useState(yrs);
     const [bestMinors, setBestMinors] = useState();
@@ -38,11 +38,34 @@ function App() {
     const [synthStats, setSynthStats] = useState();
     const [selectedMiLBTeam, setSelectedMiLBTeam] = useState();
     const [statsToDb, setStatsToDb] = useState();
+    const [topTenHit, setTopTenHit] = useState();
+    const [topTenPitch, setTopTenPitch] = useState();
     const [topTen, setTopTen] = useState();
     const [classStats, setClassStats] = useState();
-    const [isActive, setIsActive] = useState(false);
-  
- 
+    const [column, setColumn] = useState();
+    const [direction, setDirection] = useState();
+    const [curSortB, setCurSortB] = useState({bsrt: "bBA", bsDir: "desc"});
+    const [curSortP, setCurSortP] = useState({psrt: "bBA", bsDir: "desc"});
+
+    function sortBTable(e) {  
+      let { topTenBatting } = topTen
+       var newArr = topTenBatting.sort((a,b) => {      
+        return b[e] - a[e]
+      })
+       setTopTenHit({
+         topTenHit: newArr
+       })
+   }
+
+    function sortPTable(e) {  
+      let { topTenPitching } = topTen
+       var newArr = topTenPitching.sort((a,b) => {      
+        return b[e] - a[e]
+      })
+       setTopTenPitch({
+         topTenPitch: newArr
+       })
+   } 
    
     async function getTopTen(cl, yr, dv) {
       try {
@@ -54,7 +77,24 @@ function App() {
           topTenBatting: topTen.data[1],
           topTenPitching: topTen.data[0]
         })
-
+         setTopTenHit({
+          topTenHit: topTen.data[1]
+        })
+         setTopTenPitch({
+          topTenPitch: topTen.data[0]
+        })
+                 setPlayerList({
+                    playerList: null
+                })
+                 setPitcherList({
+                    pitcherList: null
+                })
+                 setSelectedMiLBTeam({
+                    selectedMiLBTeam: null
+                })
+                 setSynthStats({
+                    synthStats: null
+                })
       }
     catch (e) {
     console.error(e);  
@@ -256,6 +296,7 @@ function App() {
               setSelectedMiLBTeam={setSelectedMiLBTeam}
               />        
             <YearPicker 
+              topTen={topTen}
               years={years} 
               classes={classes} 
               getBestMinors={getBestMinors}
@@ -286,10 +327,39 @@ function App() {
           </Collapsible>   
       </Grid.Column>
 </Grid.Row>  
-<Grid.Row> 
+ 
 
-</Grid.Row>  
-<Grid.Row>
+ 
+<Grid>  
+  <Grid.Row>
+ 
+     <Grid.Column width="16">  
+      <Collapsible open trigger="See Standings"> 
+      <BestFive
+        sortBTable={sortBTable}
+        sortPTable={sortPTable}
+        topTen={topTen}
+        setTopTen={setTopTen}
+        classStats={classStats} 
+        selectedClass={selectedClass}
+        allMLB={allMLB}
+        setSelectedMiLBTeam={setSelectedMiLBTeam}
+        getPlayerList={getPlayerList}
+        selectedYear={selectedYear}
+        setSelectedYear={setSelectedYear}
+        selectedMiLBTeam={selectedMiLBTeam}
+        synthStats={synthStats}
+        {...topTenHit}
+        {...topTenPitch}
+
+        />
+          </Collapsible>
+      </Grid.Column>
+        
+
+   </Grid.Row>
+ 
+  <Grid.Row>
      <Grid.Column width="8">
        <Stats  
             {...synthStats} 
@@ -308,42 +378,27 @@ function App() {
         players={{...pitcherList, ...playerList}}
       />
     </Grid.Column>
-</Grid.Row> 
-<Collapsible open trigger="See Standings">  
-<Grid>  
-  <Grid.Row>
-     <Grid.Column width="11">  
-      <BestFive
-        {...isActive} 
-        setIsActive={setIsActive}
-        topTen={topTen}
-        classStats={classStats} 
-        selectedClass={selectedClass}
-        allMLB={allMLB}
-        setSelectedMiLBTeam={setSelectedMiLBTeam}
-        getPlayerList={getPlayerList}
-        selectedYear={selectedYear}
-        setSelectedYear={setSelectedYear}
-        selectedMiLBTeam={selectedMiLBTeam}
-        />
-      </Grid.Column>
-        
-          <Grid.Column width="5">
+    </Grid.Row> 
+    <Grid.Row>
+          <Grid.Column width="8">
             <Batters  
               {...playerList} 
               selectedMiLBTeam={selectedMiLBTeam} 
               synthStats={synthStats}
               />
-
+              </Grid.Column>
+              <Grid.Column width="8">
             <Pitchers 
               {...pitcherList} 
               selectedMiLBTeam={selectedMiLBTeam} 
               synthStats={synthStats}
               />
           </Grid.Column>
-        </Grid.Row>
+
+
+</Grid.Row> 
         </Grid>
-</Collapsible>
+
   </Grid>
     );
 }

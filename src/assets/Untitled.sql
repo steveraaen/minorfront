@@ -1,0 +1,1 @@
+select * from summary18 where pG > 100 and divID like '%' and yr = '2013' OR   yr = '2014' OR  yr = '2014' OR  yr = '2016' 

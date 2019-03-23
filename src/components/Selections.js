@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card, Container, Divider, Form, Grid, Header, Image, Loader,  Statistic,  Segment, Table } from 'semantic-ui-react'
+import { Card, Container, Divider, Form, Grid, Header, Image, Loader, Placeholder, Statistic,  Segment, Sticky, Table } from 'semantic-ui-react'
 import Collapsible from 'react-collapsible';
 import '../App.css'
 
@@ -9,8 +9,9 @@ function YearPicker(props) {
      /* props.getBestMinors(props.selectedClass.code, props.selectedDivision.value, props.selectedClass.regex, value) */
       props.setSelectedYear(value) 
       props.getTopTen(props.selectedClass.name, value, props.selectedDivision.value) 
-   /*   props.getPlayerList(props.selectedClass.regex, tm.franchise, props.selectedYear, tm.name*/
-}
+      props.setSelectedMiLBTeam(props.topTen.topTenBatting[0])
+/*  props.getPlayerList(props.selectedClass.regex, props.selectedMiLBTeam.franchise, value, props.selectedMiLBTeam.name)
+*/}
   return(
     <div>  
      <Segment style={{alignItems: 'center'}}>
@@ -52,8 +53,9 @@ function ClassPicker(props) {
 console.log(value)
 /*      props.getBestMinors(JSON.parse(value).code, props.selectedDivision.value, JSON.parse(value).regex, props.selectedYear) 
 */      props.setSelectedClass(value)  
-      props.getTopTen(value.code, props.selectedYear, props.selectedDivision.value) 
-      
+        props.getTopTen(value.code, props.selectedYear, props.selectedDivision.value) 
+/*        props.getPlayerList(value.regex, props.selectedMiLBTeam.franchise, props.selectedYear, props.selectedMiLBTeam.name)
+*/
 }
 var tempObj = {
       displayName: "All MiLB Classes",
@@ -71,7 +73,7 @@ var tempObj = {
           label={"All MiLB Classes"}
           value={tempObj}          
           onChange={handleChange}
-          checked={props.selectedClass === {tempObj}}
+          checked={props.selectedClass === tempObj}
         />
         </Form.Group>
     </Segment>
@@ -101,8 +103,8 @@ function Divisions(props) {
     function handleChange(e, {value, label}) { 
       console.log(value)
       props.setSelectedDivision({value: value, display: label}) 
-      props.getBestMinors(props.selectedClass.code, value, props.selectedClass.regex, props.selectedYear) 
       props.getTopTen(props.selectedClass.name, props.selectedYear, value) 
+    /*  props.getPlayerList(props.selectedClass.regex, props.selectedMiLBTeam.franchise, props.selectedYear, props.selectedMiLBTeam.name)*/
 }
   if(props.allDivisions) {
   return(
@@ -223,9 +225,9 @@ function Batters(props) {
   if(props.playerList) {
   return(
     <div>
-    <Segment style={{ marginTop: 2, minHeight:"32vh", overflow: 'scroll'}}>
+    <Segment style={{ marginTop: 2, height: 240, overflowY: 'scroll', paddingBottom: 10}}>
     <Header> </Header>
-      <Table compact style={{backgroundColor: 'rgba(0,0,0,0)'}}>
+      <Table compact >
       <Table.Header>
         <Table.Row>         
           <Table.HeaderCell  style={{fontSize: '1.2rem', fontWeight: 'bold'}}>Batter</Table.HeaderCell>          
@@ -256,9 +258,9 @@ function Batters(props) {
 function Pitchers(props) {
   if(props.pitcherList) {
     return(
-      <div style={{ marginTop: 50, minHeight: '24vh', overflow: 'scroll'}}>
+      <div style={{ marginTop: 2, height: 240, overflowY: 'scroll'}}>
       <Segment>
-      <Table compact  selectable striped >
+      <Table compact>
       <Table.Header>
         <Table.Row>         
           <Table.HeaderCell style={{fontSize: '1.2rem', fontWeight: 'bold'}}>Pitcher</Table.HeaderCell>          
@@ -324,7 +326,10 @@ return(
 
     </Container>
     )
-  } else {return <Loader />}
+  } else {
+    return (
+<Loader />
+      )}
 }
 function CurrentParams(props) {
   return(
@@ -355,29 +360,44 @@ function BestFive(props) {
     }, {})
 
    const handleClick = (e) => { 
-console.log(e)
+      console.log(e)
         props.getPlayerList(props.selectedClass.regex, e.majteam, e.yr, e.milbTeam)
         props.setSelectedMiLBTeam({name: e.milbTeam, logo: e.logo, franchise: e.majteam, franchiseLogo: e.franchiseLogo, color: e.color, t_id: e.id})
         props.setSelectedYear(e.yr) 
    }
+  const handleBSort = (e) => {
+    console.log(e)
+props.sortBTable(e)
+  }
+  const handlePSort = (e) => {
+    console.log(e)
+
+    props.sortPTable(e)
+  }
   return( 
   <Grid>  
    <Grid.Row columns="2">
    <Grid.Column>
+   <div style={{height: 480, overflowY: 'scroll'}}>
         <Table compact='very'>
+      
           <Table.Header>
-          <Table.Row style={{fontSize: '.7rem'}}>
+          
+          <Table.Row   style={{fontSize: '.7rem'}}>
             <Table.HeaderCell></Table.HeaderCell>
             <Table.HeaderCell></Table.HeaderCell>
             <Table.HeaderCell></Table.HeaderCell>
-            <Table.HeaderCell>AVG</Table.HeaderCell>
-            <Table.HeaderCell>HRs</Table.HeaderCell>
-            <Table.HeaderCell>Hits</Table.HeaderCell>
-            <Table.HeaderCell>At Bats</Table.HeaderCell>
+            <Table.HeaderCell  onClick={() => handleBSort('bBA')}>AVG</Table.HeaderCell>
+            <Table.HeaderCell  onClick={() => handleBSort('bHR')}>HRs</Table.HeaderCell>
+            <Table.HeaderCell  onClick={() => handleBSort('bH')}>Hits</Table.HeaderCell>
+            <Table.HeaderCell  onClick={() => handleBSort('bBB')}>Walks</Table.HeaderCell>
+            <Table.HeaderCell  onClick={() => handleBSort('bAB')}>At Bats</Table.HeaderCell>
           </Table.Row>
+          
         </Table.Header>
+        
         <Table.Body>
-          {props.topTen.topTenBatting.map((btm, idx) => {
+          {props.topTenHit && props.topTenHit.map((btm, idx) => {
             btm.id=idx
             return(
               <Table.Row                 
@@ -409,29 +429,32 @@ console.log(e)
                 <Table.Cell value={btm}>{btm.bBA}</Table.Cell>
                 <Table.Cell value={btm}>{btm.bHR}</Table.Cell>
                 <Table.Cell value={btm}>{btm.bH}</Table.Cell>
+                <Table.Cell value={btm}>{btm.bBB}</Table.Cell>
                 <Table.Cell value={btm}>{btm.bAB}</Table.Cell>
               </Table.Row>
               )
           })}
         </Table.Body>
-        </Table>
+        </Table>        
+        </div>
         </Grid.Column>
         <Grid.Column>
+           <div style={{height: 480, overflowY: 'scroll'}}>
         <Table compact='very'>
           <Table.Header>
           <Table.Row style={{fontSize: '.7rem'}}>
             <Table.HeaderCell></Table.HeaderCell>
             <Table.HeaderCell></Table.HeaderCell>
             <Table.HeaderCell></Table.HeaderCell>
-            <Table.HeaderCell>ERA</Table.HeaderCell>
-            <Table.HeaderCell>Wins</Table.HeaderCell>
-            <Table.HeaderCell>Losses</Table.HeaderCell>
-            <Table.HeaderCell>Saves</Table.HeaderCell>
-            <Table.HeaderCell>Innings </Table.HeaderCell>
+            <Table.HeaderCell onClick={() => handlePSort('pERA')}>ERA</Table.HeaderCell>
+            <Table.HeaderCell onClick={() => handlePSort('pW')}>Wins</Table.HeaderCell>
+            <Table.HeaderCell onClick={() => handlePSort('pL')}>Losses</Table.HeaderCell>
+            <Table.HeaderCell onClick={() => handlePSort('pSV')}>Saves</Table.HeaderCell>
+            <Table.HeaderCell onClick={() => handlePSort('pIP')}>Innings </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {props.topTen.topTenPitching.map((ptm, ix) => {
+          {props.topTenPitch && props.topTenPitch.map((ptm, ix) => {
             ptm.id=ix + 5
             return(
 
@@ -459,7 +482,7 @@ console.log(e)
                     })}
                   </p>
                 </Table.Cell>
-                <Table.Cell>{parseFloat(9 * (ptm.pER / ptm.pIP)).toFixed(2)}</Table.Cell>
+                <Table.Cell>{ptm.pERA}</Table.Cell>
                 <Table.Cell>{ptm.pW}</Table.Cell>
                 <Table.Cell>{ptm.pL}</Table.Cell>
                 <Table.Cell>{ptm.pSV}</Table.Cell>
@@ -469,6 +492,7 @@ console.log(e)
           })}
         </Table.Body>
         </Table>
+        </div>
         </Grid.Column>
         </Grid.Row>
        </Grid> 
