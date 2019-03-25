@@ -13,6 +13,7 @@ import leagues from './assets/leagues.js'
 
 const yrs = [
 
+    { text: "All Years", value: "20%", key: "20%" },
     { text: "2013", value: 2013, key: "2013" },
     { text: "2014", value: 2014, key: "2014" },
     { text: "2015", value: 2015, key: "2015" },
@@ -28,7 +29,7 @@ function App() {
     const [years] = useState(yrs);
     const [bestMinors, setBestMinors] = useState();
     const [allMLB] = useState(mlbTeams);
-    const [selectedYear, setSelectedYear] = useState("20%");
+    const [selectedYear, setSelectedYear] = useState(yrs[0].value);
     const [playerList, setPlayerList] = useState();
     const [pitcherList, setPitcherList] = useState();
     const [classIcon] = useState('angle down');
@@ -72,7 +73,7 @@ function App() {
                
         const topTenPromise = axios('/api/classSummary', { params: { cl, yr, dv } })
         const topTen = await topTenPromise; 
-        console.log(topTen)
+        console.log(topTen.data[1])
         setTopTen({
           topTenBatting: topTen.data[1],
           topTenPitching: topTen.data[0]
@@ -83,7 +84,7 @@ function App() {
          setTopTenPitch({
           topTenPitch: topTen.data[0]
         })
-                 setPlayerList({
+/*                 setPlayerList({
                     playerList: null
                 })
                  setPitcherList({
@@ -94,14 +95,12 @@ function App() {
                 })
                  setSynthStats({
                     synthStats: null
-                })
+                })*/
       }
     catch (e) {
     console.error(e);  
   };
     }
-
-
     function makeDivs() {
       var uniqueDivisions = allMLB.filter((thing, index, self) =>
       index === self.findIndex((t) => (
@@ -249,7 +248,6 @@ function App() {
   };
     }
     
-
     useEffect(() => {
         getTopTen(selectedClass.name, selectedYear, selectedDivision.value)
     }, {});
@@ -331,10 +329,16 @@ function App() {
 
  
 <Grid>  
-  <Grid.Row>
+  <Grid.Row columns={1}>
  
-     <Grid.Column width="16">  
-      <Collapsible open trigger="See Standings"> 
+     <Grid.Column>  
+      <Collapsible  
+      open           
+      trigger={<div>Show list of top MiLB teams <Icon name={classIcon} /></div>} 
+      triggerWhenOpen={<div>Hide list of top MiLB teams <Icon name="angle up" /></div>}
+      triggerStyle={{textAlign: "left", fontSize: '1.2rem', padding: 2, margin: 2}}
+
+      > 
       <BestFive
         sortBTable={sortBTable}
         sortPTable={sortPTable}
@@ -355,10 +359,7 @@ function App() {
         />
           </Collapsible>
       </Grid.Column>
-        
-
    </Grid.Row>
- 
   <Grid.Row>
      <Grid.Column width="8">
        <Stats  
@@ -371,6 +372,7 @@ function App() {
             players={{...pitcherList, ...playerList}}
             pitcherList={pitcherList}
             {...radialData}
+            
             />  
     </Grid.Column>
     <Grid.Column width="8">

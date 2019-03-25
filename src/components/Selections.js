@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { Card, Container, Divider, Form, Grid, Header, Image, Loader, Placeholder, Statistic,  Segment, Sticky, Table } from 'semantic-ui-react'
+import { Card, Container, Divider, Form, Grid, Header, Image, Loader, Modal, Placeholder, Statistic,  Segment, Sticky, Table } from 'semantic-ui-react'
 import Collapsible from 'react-collapsible';
 import '../App.css'
 
 function YearPicker(props) {
   function handleChange(e, { value }) {
-  console.log(value)
+  console.log(e.target)
      /* props.getBestMinors(props.selectedClass.code, props.selectedDivision.value, props.selectedClass.regex, value) */
       props.setSelectedYear(value) 
       props.getTopTen(props.selectedClass.name, value, props.selectedDivision.value) 
@@ -14,18 +14,7 @@ function YearPicker(props) {
 */}
   return(
     <div>  
-     <Segment style={{alignItems: 'center'}}>
-       <Form.Group> 
-        <Form.Checkbox
-         toggle
-          key={'allYears'}
-          label={"All Years"}
-          value={"20%"}          
-          onChange={handleChange}
-          checked={props.selectedYear === "20%"}
-        />
-        </Form.Group>
-    </Segment>
+
     <Segment> 
         <Form.Group>
         { props.years.map((yr, idx) => {
@@ -59,9 +48,9 @@ console.log(value)
 }
 var tempObj = {
       displayName: "All MiLB Classes",
-      name: "%A%",
-      code: "%A%",
-      regex: "%A%"
+      name: "%%",
+      code: "%%",
+      regex: "%"
 }
     return ( 
     <div> 
@@ -221,11 +210,11 @@ function TeamList(props) {
 } else {return(<div>.</div>)}
 }
 
-function Batters(props) {
+const Batters = (props) => {
   if(props.playerList) {
   return(
-    <div>
-    <Segment style={{ marginTop: 2, height: 240, overflowY: 'scroll', paddingBottom: 10}}>
+    <div style={{width: '45vw', marginTop: 2, height: 240, overflowY: 'scroll', paddingBottom: 10}}>
+    <Segment>
     <Header> </Header>
       <Table compact >
       <Table.Header>
@@ -258,7 +247,7 @@ function Batters(props) {
 function Pitchers(props) {
   if(props.pitcherList) {
     return(
-      <div style={{ marginTop: 2, height: 240, overflowY: 'scroll'}}>
+      <div style={{width: '45vw', marginTop: 2, height: 240, overflowY: 'scroll'}}>
       <Segment>
       <Table compact>
       <Table.Header>
@@ -291,13 +280,16 @@ function Pitchers(props) {
 function Stats(props) {
   if(props.synthStats && props.selectedMiLBTeam.name && props.players.playerList && props.players.pitcherList){
 return(
-<Container fluid>
-  <Segment  style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center'}}>
+  <Modal defaultOpen={true}>
 
-   <Image rounded src={props.selectedMiLBTeam.logo} width={110} height={84}/>
+    <Modal.Content wrapped basic image>
+
+  <Segment  style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center'}}>
    <div style={{display: 'flex', flexDirection: 'row', fontSize: '1.6rem', fontWeight: 600}}>{props.selectedYear}
    <div style={{fontSize: '1.6rem', fontWeight: 600, color: props.selectedMiLBTeam.color}}>{props.selectedMiLBTeam.name}</div></div>          
-   <Container >
+
+   <Image rounded src={props.selectedMiLBTeam.logo} width={110} height={84}/>
+ 
     <Segment >    
       <Statistic size="mini">
         <Statistic.Value>{props.synthStats.batting.bat.AB}</Statistic.Value> 
@@ -321,14 +313,25 @@ return(
         <Statistic.Label>2018 MLB Players</Statistic.Label>       
       </Statistic>   
     </Segment>
-    </Container> 
+   </Segment>
+   <Segment style={{display: 'flex', flexDirection: 'column'}}>
+         <Batters
+          {...props.batterList} 
+          selectedMiLBTeam={props.selectedMiLBTeam} 
+          synthStats={props.synthStats} />
+     <Pitchers
+          {...props.pitcherList} 
+          selectedMiLBTeam={props.selectedMiLBTeam} 
+          synthStats={props.synthStats} />
    </Segment>
 
-    </Container>
+    </Modal.Content>
+  </Modal>
+
     )
   } else {
     return (
-<Loader />
+<Placeholder />
       )}
 }
 function CurrentParams(props) {
@@ -352,34 +355,32 @@ function CurrentParams(props) {
 }
 function BestFive(props) {
 
-  if(props.topTen && props.allMLB && props.selectedClass && props.selectedMiLBTeam) {
+  if(props.topTen && props.allMLB && props.selectedClass /*&& props.selectedMiLBTeam*/) {
     useEffect(() => {
        props.setSelectedMiLBTeam({name: props.topTen.topTenBatting[0].milbTeam, logo: props.topTen.topTenBatting[0].logo, franchise: props.topTen.topTenBatting[0].majteam, franchiseLogo: props.topTen.topTenBatting[0].franchiseLogo, color: props.topTen.topTenBatting[0].color})
-       props.getPlayerList(props.selectedClass.regex, props.topTen.topTenBatting[0].majteam, props.topTen.topTenBatting[0].yr, props.topTen.topTenBatting[0].milbTeam)
-        props.setSelectedYear(props.topTen.topTenBatting[0].yr) 
+/*       props.getPlayerList(props.selectedClass.regex, props.topTen.topTenBatting[0].majteam, props.topTen.topTenBatting[0].yr, props.topTen.topTenBatting[0].milbTeam)
+*/      /*  props.setSelectedYear(props.topTen.topTenBatting[0].yr) */
     }, {})
-
    const handleClick = (e) => { 
       console.log(e)
         props.getPlayerList(props.selectedClass.regex, e.majteam, e.yr, e.milbTeam)
         props.setSelectedMiLBTeam({name: e.milbTeam, logo: e.logo, franchise: e.majteam, franchiseLogo: e.franchiseLogo, color: e.color, t_id: e.id})
-        props.setSelectedYear(e.yr) 
+       /* props.setSelectedYear(e.yr) */
    }
   const handleBSort = (e) => {
     console.log(e)
-props.sortBTable(e)
+    props.sortBTable(e)
   }
   const handlePSort = (e) => {
     console.log(e)
-
     props.sortPTable(e)
   }
   return( 
   <Grid>  
    <Grid.Row columns="2">
-   <Grid.Column>
-   <div style={{height: 480, overflowY: 'scroll'}}>
-        <Table compact='very'>
+   <Grid.Column  style={{display: 'flex', flexDirection: 'row'}}>
+   <div style={{minWidth: '45vw', maxHeight: 500, overflowY: 'scroll'}}>
+        <Table style={{backgroundColor: 'seashell'}} compact='very'>
       
           <Table.Header>
           
@@ -387,17 +388,37 @@ props.sortBTable(e)
             <Table.HeaderCell></Table.HeaderCell>
             <Table.HeaderCell></Table.HeaderCell>
             <Table.HeaderCell></Table.HeaderCell>
-            <Table.HeaderCell  onClick={() => handleBSort('bBA')}>AVG</Table.HeaderCell>
-            <Table.HeaderCell  onClick={() => handleBSort('bHR')}>HRs</Table.HeaderCell>
-            <Table.HeaderCell  onClick={() => handleBSort('bH')}>Hits</Table.HeaderCell>
-            <Table.HeaderCell  onClick={() => handleBSort('bBB')}>Walks</Table.HeaderCell>
-            <Table.HeaderCell  onClick={() => handleBSort('bAB')}>At Bats</Table.HeaderCell>
+            <Table.HeaderCell  
+            onClick={() => handleBSort('bBA')}
+           >AVG
+            
+            </Table.HeaderCell>
+            <Table.HeaderCell  
+            onClick={() => handleBSort('bHR')}
+           >HRs
+            
+            </Table.HeaderCell>
+            <Table.HeaderCell  
+            onClick={() => handleBSort('bH')}>
+           >Hits
+            
+            </Table.HeaderCell>
+            <Table.HeaderCell  
+            onClick={() => handleBSort('bBB')}
+           >Walks
+            
+            </Table.HeaderCell>
+            <Table.HeaderCell  
+            onClick={() => handleBSort('bAB')}
+           >At Bats
+            
+            </Table.HeaderCell>
           </Table.Row>
           
         </Table.Header>
         
         <Table.Body>
-          {props.topTenHit && props.topTenHit.map((btm, idx) => {
+          { props.topTenHit && props.topTenHit.map((btm, idx) => {
             btm.id=idx
             return(
               <Table.Row                 
@@ -439,8 +460,8 @@ props.sortBTable(e)
         </div>
         </Grid.Column>
         <Grid.Column>
-           <div style={{height: 480, overflowY: 'scroll'}}>
-        <Table compact='very'>
+           <div style={{minWidth: '45vw', maxHeight: 500}}>
+        <Table style={{backgroundColor: 'seashell'}} compact='very'>
           <Table.Header>
           <Table.Row style={{fontSize: '.7rem'}}>
             <Table.HeaderCell></Table.HeaderCell>
@@ -503,7 +524,7 @@ function BestPlayers(props) {
   if(props.players.playerList && props.players.pitcherList){
 return(
   <Container>
-  <Table unstackable>
+  <Table style={{width: '45vw'}} unstackable>
   <Table.Header>
       <Table.Row style={{fontSize: '1rem', fontWeight: 600}}>
          <Table.HeaderCell>Best MLB 2018 Hitter </Table.HeaderCell>
