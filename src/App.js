@@ -47,6 +47,7 @@ function App() {
     const [direction, setDirection] = useState();
     const [curSortB, setCurSortB] = useState({bsrt: "bBA", bsDir: "desc"});
     const [curSortP, setCurSortP] = useState({psrt: "bBA", bsDir: "desc"});
+    const [modalOpen, setModalOpen] = useState();
 
     function sortBTable(e) {  
       let { topTenBatting } = topTen
@@ -191,7 +192,8 @@ function App() {
                HBP: a.HBP + b.HBP,
                BB: a.BB + b.BB,
                G: a.G + b.G,
-               RBI: a.RBI + b.RBI
+               RBI: a.RBI + b.RBI,
+               YR: a.YR
 
              })
            )
@@ -210,6 +212,7 @@ function App() {
                GS: a.GS + b.GS,
                HBP: a.HBP + b.HBP,
                IBB: a.IBB + b.IBB,
+               YR: a.YR
              })
            )              
           setSynthStats({
@@ -267,7 +270,7 @@ function App() {
   <Grid  stackable centered>
 <Grid.Row columns={1}>  
     <Grid.Column >
-      <Header as="h1" style={{fontSize: '1.8rem',display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>2018 MLB Performance of MiLB Teams (2013-2018)</Header>
+      <Header as="h1" style={{fontSize: '1.8rem',display: 'flex', flexDirection: 'row', justifyContent: 'center', color: 'LemonChiffon'}}>2018 MLB Performance of MiLB Teams (2013-2018)</Header>
     </Grid.Column>
 </Grid.Row>  
 <Grid.Row columns={1}>  
@@ -325,9 +328,6 @@ function App() {
           </Collapsible>   
       </Grid.Column>
 </Grid.Row>  
- 
-
- 
 <Grid>  
   <Grid.Row columns={1}>
  
@@ -340,6 +340,8 @@ function App() {
 
       > 
       <BestFive
+        setModalOpen={setModalOpen}
+        modalOpen={modalOpen}
         sortBTable={sortBTable}
         sortPTable={sortPTable}
         topTen={topTen}
@@ -363,42 +365,22 @@ function App() {
   <Grid.Row>
      <Grid.Column width="8">
        <Stats  
-            {...synthStats} 
+            setModalOpen ={setModalOpen}
+            modalOpen={modalOpen}
             selectedMiLBTeam={selectedMiLBTeam} 
             selectedYear={selectedYear}
             setStatsToDb={setStatsToDb}
             selectedDivision={selectedDivision}
             selectedClass={selectedClass}
-            players={{...pitcherList, ...playerList}}
-            pitcherList={pitcherList}
-            {...radialData}
+            {...pitcherList} 
+            {...playerList}
+             {...synthStats} 
+         
             
             />  
-    </Grid.Column>
-    <Grid.Column width="8">
-      <BestPlayers 
-        players={{...pitcherList, ...playerList}}
-      />
+ 
     </Grid.Column>
     </Grid.Row> 
-    <Grid.Row>
-          <Grid.Column width="8">
-            <Batters  
-              {...playerList} 
-              selectedMiLBTeam={selectedMiLBTeam} 
-              synthStats={synthStats}
-              />
-              </Grid.Column>
-              <Grid.Column width="8">
-            <Pitchers 
-              {...pitcherList} 
-              selectedMiLBTeam={selectedMiLBTeam} 
-              synthStats={synthStats}
-              />
-          </Grid.Column>
-
-
-</Grid.Row> 
         </Grid>
 
   </Grid>

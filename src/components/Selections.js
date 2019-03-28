@@ -1,19 +1,20 @@
 import React, { useEffect } from 'react';
-import { Card, Container, Divider, Form, Grid, Header, Image, Loader, Modal, Placeholder, Statistic,  Segment, Sticky, Table } from 'semantic-ui-react'
+import { Card, Container, Divider, Form, Grid, Header, Image, Loader, Modal, Placeholder, Statistic, Segment, Sticky, Table } from 'semantic-ui-react'
 import Collapsible from 'react-collapsible';
 import '../App.css'
 
 function YearPicker(props) {
-  function handleChange(e, { value }) {
-  console.log(e.target)
-     /* props.getBestMinors(props.selectedClass.code, props.selectedDivision.value, props.selectedClass.regex, value) */
-      props.setSelectedYear(value) 
-      props.getTopTen(props.selectedClass.name, value, props.selectedDivision.value) 
-      props.setSelectedMiLBTeam(props.topTen.topTenBatting[0])
-/*  props.getPlayerList(props.selectedClass.regex, props.selectedMiLBTeam.franchise, value, props.selectedMiLBTeam.name)
-*/}
-  return(
-    <div>  
+    function handleChange(e, { value, label }) {
+        console.log(e.target)
+        /* props.getBestMinors(props.selectedClass.code, props.selectedDivision.value, props.selectedClass.regex, value) */
+        props.setSelectedYear(value)
+        props.getTopTen(props.selectedClass.name, value, props.selectedDivision.value)
+        props.setSelectedMiLBTeam(props.topTen.topTenBatting[0])
+        /*  props.getPlayerList(props.selectedClass.regex, props.selectedMiLBTeam.franchise, value, props.selectedMiLBTeam.name)
+         */
+    }
+    return (
+        <div>  
 
     <Segment> 
         <Form.Group>
@@ -37,32 +38,34 @@ function YearPicker(props) {
 
     )
 }
+
 function ClassPicker(props) {
-  function handleChange(e, { value }) {
-console.log(value)
-/*      props.getBestMinors(JSON.parse(value).code, props.selectedDivision.value, JSON.parse(value).regex, props.selectedYear) 
-*/      props.setSelectedClass(value)  
-        props.getTopTen(value.code, props.selectedYear, props.selectedDivision.value) 
-/*        props.getPlayerList(value.regex, props.selectedMiLBTeam.franchise, props.selectedYear, props.selectedMiLBTeam.name)
-*/
-}
-var tempObj = {
-      displayName: "All MiLB Classes",
-      name: "%%",
-      code: "%%",
-      regex: "%"
-}
-    return ( 
-    <div> 
+    function handleChange(e, { value }) {
+        console.log(value)
+        /*      props.getBestMinors(JSON.parse(value).code, props.selectedDivision.value, JSON.parse(value).regex, props.selectedYear) 
+         */
+        props.setSelectedClass(value)
+        props.getTopTen(value, props.selectedYear, props.selectedDivision.value)
+        /*        props.getPlayerList(value.regex, props.selectedMiLBTeam.franchise, props.selectedYear, props.selectedMiLBTeam.name)
+         */
+    }
+    var tempObj = {
+        displayName: "All MiLB Classes",
+        name: "%%",
+        code: "%%",
+        regex: "%"
+    }
+    return (
+        <div> 
      <Segment style={{alignItems: 'center'}}>
        <Form.Group> 
         <Form.Checkbox
          toggle
           key={'allClasses'}
           label={"All MiLB Classes"}
-          value={tempObj}          
+          value={tempObj.name}          
           onChange={handleChange}
-          checked={props.selectedClass === tempObj}
+          checked={props.selectedClass === tempObj.name}
         />
         </Form.Group>
     </Segment>
@@ -74,9 +77,9 @@ var tempObj = {
              toggle
              label={cl.name}
              key={cl.regex} 
-             value={cl}
+             value={cl.name}
              onChange={handleChange}
-             checked={props.selectedClass === cl}
+             checked={props.selectedClass === cl.name}
              >
              </Form.Checkbox>
             )
@@ -89,15 +92,15 @@ var tempObj = {
 }
 
 function Divisions(props) {
-    function handleChange(e, {value, label}) { 
-      console.log(value)
-      props.setSelectedDivision({value: value, display: label}) 
-      props.getTopTen(props.selectedClass.name, props.selectedYear, value) 
-    /*  props.getPlayerList(props.selectedClass.regex, props.selectedMiLBTeam.franchise, props.selectedYear, props.selectedMiLBTeam.name)*/
-}
-  if(props.allDivisions) {
-  return(
-    <div>
+    function handleChange(e, { value, label }) {
+        console.log(value)
+        props.setSelectedDivision({ value: value, display: label })
+        props.getTopTen(props.selectedClass.name, props.selectedYear, value)
+        /*  props.getPlayerList(props.selectedClass.regex, props.selectedMiLBTeam.franchise, props.selectedYear, props.selectedMiLBTeam.name)*/
+    }
+    if (props.allDivisions) {
+        return (
+            <div>
      <Segment style={{alignItems: 'center'}}>
        <Form.Group> 
         <Form.Checkbox
@@ -165,74 +168,35 @@ function Divisions(props) {
     </Segment>
     </div>
     </div>
-    )
-  } else {return <Loader active />}
- }
-
-function TeamList(props) {
-  if(props.radialData) {
-    return( 
-      <div>
-      <Table  selectable >
-      <Table.Header sticky="true">
-        <Table.Row>                   
-              
-          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold', overflow: 'hidden', textOverflow: 'ellipsis'}}>Team</Table.HeaderCell>          
-          <Table.HeaderCell style={{fontSize: 30, fontWeight: 'bold'}}>MLB Players</Table.HeaderCell>          
-          <Table.HeaderCell style={{textAlign: "right"}}>Franchise</Table.HeaderCell>          
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-      {props.radialData.map((tm, idx) => {   
-    for(let i = 0; i < props.allMLB.length; i++) {
-      if(tm.franchise === props.allMLB[i].teamCode){
-        tm.franchiseLogo= props.allMLB[i].picUrl
-        tm.color= props.allMLB[i].color
-      }
-    }
-    return(
-    <Table.Row 
-      onClick={() => {props.getPlayerList(props.selectedClass.regex, tm.franchise, props.selectedYear, tm.name)
-                      props.setSelectedMiLBTeam(({name: tm.name, logo: tm.logo, franchise: tm.franchise, franchiseLogo: tm.franchiseLogo, color: tm.color, players: tm.value, division: tm.division}))
-                    } }
-      key = {idx}
-      >              
-          <Table.Cell style={{color: tm.color, fontSize: 30, fontWeight: 'bold', width: 24, overflow: 'hidden', textOverflow: 'ellipsis'}}>{tm.name}</Table.Cell>
-          <Table.Cell style={{color: 'black', fontSize: 30, fontWeight: 'bold', width: 20}}>{tm.value}</Table.Cell>
-          <Table.Cell style={{width: 10}}><img alt="team franchise logo" width={100} height={80} src={tm.franchiseLogo} /></Table.Cell>
-    </Table.Row>
-      )
-  })}
-      </Table.Body>
-      </Table>
-      </div> 
-      )
-} else {return(<div>.</div>)}
+        )
+    } else { return <Loader active /> }
 }
 
+
 const Batters = (props) => {
-  if(props.playerList) {
-  return(
-    <div style={{width: '45vw', marginTop: 2, height: 240, overflowY: 'scroll', paddingBottom: 10}}>
+    if (props.playerList) {
+
+        return (
+            <div style={{width: '45vw', marginTop: 2, height: 240, overflowY: 'scroll', paddingBottom: 10}}>
     <Segment>
-    <Header> </Header>
+ 
       <Table compact >
       <Table.Header>
         <Table.Row>         
-          <Table.HeaderCell  style={{fontSize: '1.2rem', fontWeight: 'bold'}}>Batter</Table.HeaderCell>          
-          <Table.HeaderCell  style={{fontSize: '1.2rem', fontWeight: 'bold'}}>Team</Table.HeaderCell>          
-          <Table.HeaderCell  style={{fontSize: '1.2rem', fontWeight: 'bold'}}>At Bats</Table.HeaderCell>          
-          <Table.HeaderCell  style={{fontSize: '1.2rem', fontWeight: 'bold'}}>Average</Table.HeaderCell>          
+          <Table.HeaderCell  style={{fontSize: '1rem', fontWeight: 'bold'}}>Batter</Table.HeaderCell>          
+          <Table.HeaderCell  style={{fontSize: '1rem', fontWeight: 'bold'}}>Team</Table.HeaderCell>          
+          <Table.HeaderCell  style={{fontSize: '1rem', fontWeight: 'bold'}}>At Bats</Table.HeaderCell>          
+          <Table.HeaderCell  style={{fontSize: '1rem', fontWeight: 'bold'}}>Average</Table.HeaderCell>          
         </Table.Row>
       </Table.Header>
       <Table.Body>
       {props.playerList.map((pl, idx) => {
         return(
         <Table.Row key={idx}>
-          <Table.Cell  style={{fontSize: '1.2rem', fontWeight: 'bold'}} >{pl.playerName}</Table.Cell>
-          <Table.Cell style={{fontSize: '1.2rem', fontWeight: 'bold', color: pl.color}}>{pl.teamID}</Table.Cell>
-          <Table.Cell  style={{fontSize: '1.2rem', fontWeight: 'bold'}} >{pl.AB}</Table.Cell>
-          <Table.Cell  style={{fontSize: '1.2rem', fontWeight: 'bold'}} >{parseFloat(pl.AVG).toFixed(3)}</Table.Cell>
+          <Table.Cell  style={{fontSize: '1rem', fontWeight: 'bold'}} >{pl.playerName}</Table.Cell>
+          <Table.Cell style={{fontSize: '1rem', fontWeight: 'bold', color: pl.color}}>{pl.teamID}</Table.Cell>
+          <Table.Cell  style={{fontSize: '1rem', fontWeight: 'bold'}} >{pl.AB}</Table.Cell>
+          <Table.Cell  style={{fontSize: '1rem', fontWeight: 'bold'}} >{parseFloat(pl.AVG).toFixed(3)}</Table.Cell>
         </Table.Row>
         )
         })
@@ -241,31 +205,32 @@ const Batters = (props) => {
     </Table>
     </Segment>
   </div>
-    )}
-  else {return (<div>.</div>)}
+        )
+    } else { return (<div></div>) }
 }
+
 function Pitchers(props) {
-  if(props.pitcherList) {
-    return(
-      <div style={{width: '45vw', marginTop: 2, height: 240, overflowY: 'scroll'}}>
+    if (props.pitcherList) {
+        return (
+            <div style={{width: '45vw', marginTop: 2, height: 240, overflowY: 'scroll'}}>
       <Segment>
       <Table compact>
       <Table.Header>
         <Table.Row>         
-          <Table.HeaderCell style={{fontSize: '1.2rem', fontWeight: 'bold'}}>Pitcher</Table.HeaderCell>          
-          <Table.HeaderCell style={{fontSize: '1.2rem', fontWeight: 'bold'}}>Team</Table.HeaderCell>          
-          <Table.HeaderCell style={{fontSize: '1.2rem', fontWeight: 'bold'}}>Innings</Table.HeaderCell>                   
-          <Table.HeaderCell style={{fontSize: '1.2rem', fontWeight: 'bold'}}>ERA</Table.HeaderCell>          
+          <Table.HeaderCell style={{fontSize: '1rem', fontWeight: 'bold'}}>Pitcher</Table.HeaderCell>          
+          <Table.HeaderCell style={{fontSize: '1rem', fontWeight: 'bold'}}>Team</Table.HeaderCell>          
+          <Table.HeaderCell style={{fontSize: '1rem', fontWeight: 'bold'}}>Innings</Table.HeaderCell>                   
+          <Table.HeaderCell style={{fontSize: '1rem', fontWeight: 'bold'}}>ERA</Table.HeaderCell>          
         </Table.Row>
       </Table.Header>
       <Table.Body>
       {props.pitcherList.map((pt, idx) => {
         return(
         <Table.Row key={idx}>
-          <Table.Cell style={{fontSize: '1.2rem', fontWeight: 'bold'}}>{pt.playerName}</Table.Cell>
-          <Table.Cell style={{fontSize: '1.2rem', fontWeight: 'bold', color: pt.color}}>{pt.teamID}</Table.Cell>
-          <Table.Cell style={{fontSize: '1.2rem', fontWeight: 'bold'}}>{pt.IP.toFixed(1)}</Table.Cell>
-          <Table.Cell style={{fontSize: '1.2rem', fontWeight: 'bold'}}>{parseFloat(9 * (pt.ER / pt.IP)).toFixed(2)}</Table.Cell>
+          <Table.Cell style={{fontSize: '1rem', fontWeight: 'bold'}}>{pt.playerName}</Table.Cell>
+          <Table.Cell style={{fontSize: '1rem', fontWeight: 'bold', color: pt.color}}>{pt.teamID}</Table.Cell>
+          <Table.Cell style={{fontSize: '1rem', fontWeight: 'bold'}}>{pt.IP.toFixed(1)}</Table.Cell>
+          <Table.Cell style={{fontSize: '1rem', fontWeight: 'bold'}}>{parseFloat(9 * (pt.ER / pt.IP)).toFixed(2)}</Table.Cell>
         </Table.Row>
         )
         })
@@ -275,22 +240,33 @@ function Pitchers(props) {
     </Segment>
     </div>
         )
-    } else {return(<div></div>)}
+    } else { return (<div></div>) }
 }
+
 function Stats(props) {
-  if(props.synthStats && props.selectedMiLBTeam.name && props.players.playerList && props.players.pitcherList){
-return(
-  <Modal defaultOpen={true}>
+    if (props.synthStats && props.selectedMiLBTeam.name && props.playerList && props.pitcherList) {
+        return (
+      <Modal 
+        closeIcon 
+        onClose={() => props.setModalOpen(false)}
+        open={props.modalOpen}
+        fullscreen="true"  
+        style={{width: '1fr'}} 
+        >
 
-    <Modal.Content wrapped basic image>
-
+    <Modal.Content >
   <Segment  style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center'}}>
-   <div style={{display: 'flex', flexDirection: 'row', fontSize: '1.6rem', fontWeight: 600}}>{props.selectedYear}
-   <div style={{fontSize: '1.6rem', fontWeight: 600, color: props.selectedMiLBTeam.color}}>{props.selectedMiLBTeam.name}</div></div>          
+   <div style={{display: 'flex', flexDirection: 'row', color: 'DarkSlateGrey', fontSize: '1.6rem', fontWeight: 600}}>{props.synthStats.batting.bat.YR}
+   <div style={{fontSize: '1.6rem', fontWeight: 600,  color: props.selectedMiLBTeam.color}}>{props.selectedMiLBTeam.name}</div></div>          
 
    <Image rounded src={props.selectedMiLBTeam.logo} width={110} height={84}/>
- 
-    <Segment >    
+ </Segment>
+
+    <Segment >  
+          <Statistic size="mini"> 
+        <Statistic.Value>{props.playerList.length + props.pitcherList.length}</Statistic.Value> 
+        <Statistic.Label>2018 MLB Players</Statistic.Label>       
+      </Statistic>   
       <Statistic size="mini">
         <Statistic.Value>{props.synthStats.batting.bat.AB}</Statistic.Value> 
         <Statistic.Label>At Bats</Statistic.Label>       
@@ -308,19 +284,16 @@ return(
         <Statistic.Value>{props.synthStats.pitching.pit.ERA}</Statistic.Value> 
         <Statistic.Label>ER Avg.</Statistic.Label>       
       </Statistic>
-      <Statistic size="mini"> 
-        <Statistic.Value>{props.players.playerList.length + props.players.pitcherList.length}</Statistic.Value> 
-        <Statistic.Label>2018 MLB Players</Statistic.Label>       
-      </Statistic>   
-    </Segment>
+  
+    
    </Segment>
-   <Segment style={{display: 'flex', flexDirection: 'column'}}>
+   <Segment style={{display: 'flex', flexDirection: 'row'}}>
          <Batters
-          {...props.batterList} 
+          playerList={props.playerList} 
           selectedMiLBTeam={props.selectedMiLBTeam} 
           synthStats={props.synthStats} />
      <Pitchers
-          {...props.pitcherList} 
+          pitcherList={props.pitcherList} 
           selectedMiLBTeam={props.selectedMiLBTeam} 
           synthStats={props.synthStats} />
    </Segment>
@@ -328,59 +301,44 @@ return(
     </Modal.Content>
   </Modal>
 
-    )
-  } else {
-    return (
-<Placeholder />
-      )}
+        )
+    } else {
+        return (
+            <Placeholder />
+        )
+    }
 }
-function CurrentParams(props) {
-  return(
-    <Statistic.Group>
-      <Statistic size='mini'>
-        <Statistic.Label>Minor League Class</Statistic.Label>
-        <Statistic.Value>{props.selectedClass.name}</Statistic.Value>        
-      </Statistic>
-      <Statistic size='mini'>
-        <Statistic.Label>Minor League Year</Statistic.Label>
-        <Statistic.Value>{props.selectedYear}</Statistic.Value>        
-      </Statistic>
-      <Statistic size='mini'>
-        <Statistic.Label>Major League Selection</Statistic.Label>
-        <Statistic.Value>{props.selectedDivision.display}</Statistic.Value>        
-      </Statistic>
-     
-    </Statistic.Group>
-    )
-}
+
 function BestFive(props) {
 
-  if(props.topTen && props.allMLB && props.selectedClass /*&& props.selectedMiLBTeam*/) {
-    useEffect(() => {
-       props.setSelectedMiLBTeam({name: props.topTen.topTenBatting[0].milbTeam, logo: props.topTen.topTenBatting[0].logo, franchise: props.topTen.topTenBatting[0].majteam, franchiseLogo: props.topTen.topTenBatting[0].franchiseLogo, color: props.topTen.topTenBatting[0].color})
-/*       props.getPlayerList(props.selectedClass.regex, props.topTen.topTenBatting[0].majteam, props.topTen.topTenBatting[0].yr, props.topTen.topTenBatting[0].milbTeam)
-*/      /*  props.setSelectedYear(props.topTen.topTenBatting[0].yr) */
-    }, {})
-   const handleClick = (e) => { 
-      console.log(e)
-        props.getPlayerList(props.selectedClass.regex, e.majteam, e.yr, e.milbTeam)
-        props.setSelectedMiLBTeam({name: e.milbTeam, logo: e.logo, franchise: e.majteam, franchiseLogo: e.franchiseLogo, color: e.color, t_id: e.id})
-       /* props.setSelectedYear(e.yr) */
-   }
-  const handleBSort = (e) => {
-    console.log(e)
-    props.sortBTable(e)
-  }
-  const handlePSort = (e) => {
-    console.log(e)
-    props.sortPTable(e)
-  }
-  return( 
-  <Grid>  
+    if (props.topTen && props.allMLB && props.selectedClass /*&& props.selectedMiLBTeam*/ ) {
+        useEffect(() => {
+            props.setSelectedMiLBTeam({ name: props.topTen.topTenBatting[0].milbTeam, logo: props.topTen.topTenBatting[0].logo, franchise: props.topTen.topTenBatting[0].majteam, franchiseLogo: props.topTen.topTenBatting[0].franchiseLogo, color: props.topTen.topTenBatting[0].color })
+            /*       props.getPlayerList(props.selectedClass.regex, props.topTen.topTenBatting[0].majteam, props.topTen.topTenBatting[0].yr, props.topTen.topTenBatting[0].milbTeam)
+             */
+            /*  props.setSelectedYear(props.topTen.topTenBatting[0].yr) */
+        }, {})
+        const handleClick = (e) => {
+            console.log(e)
+            props.getPlayerList(props.selectedClass.regex, e.majteam, e.yr, e.milbTeam)
+            props.setSelectedMiLBTeam({ name: e.milbTeam, logo: e.logo, franchise: e.majteam, franchiseLogo: e.franchiseLogo, color: e.color, t_id: e.id })
+            props.setModalOpen(true)
+            /* props.setSelectedYear(e.yr) */
+        }
+        const handleBSort = (e) => {
+            console.log(e)
+            props.sortBTable(e)
+        }
+        const handlePSort = (e) => {
+            console.log(e)
+            props.sortPTable(e)
+        }
+        return (
+            <Grid>  
    <Grid.Row columns="2">
    <Grid.Column  style={{display: 'flex', flexDirection: 'row'}}>
    <div style={{minWidth: '45vw', maxHeight: 500, overflowY: 'scroll'}}>
-        <Table style={{backgroundColor: 'seashell'}} compact='very'>
+        <Table style={{backgroundColor: 'seashell'}} collapsible='true'>
       
           <Table.Header>
           
@@ -399,7 +357,7 @@ function BestFive(props) {
             
             </Table.HeaderCell>
             <Table.HeaderCell  
-            onClick={() => handleBSort('bH')}>
+            onClick={() => handleBSort('bH')}
            >Hits
             
             </Table.HeaderCell>
@@ -460,8 +418,9 @@ function BestFive(props) {
         </div>
         </Grid.Column>
         <Grid.Column>
-           <div style={{minWidth: '45vw', maxHeight: 500}}>
-        <Table style={{backgroundColor: 'seashell'}} compact='very'>
+          <div style={{minWidth: '45vw', maxHeight: 500, overflowY: 'scroll'}}>
+        <Table style={{backgroundColor: 'seashell'}} collapsible='true'>
+     
           <Table.Header>
           <Table.Row style={{fontSize: '.7rem'}}>
             <Table.HeaderCell></Table.HeaderCell>
@@ -516,15 +475,16 @@ function BestFive(props) {
         </div>
         </Grid.Column>
         </Grid.Row>
-       </Grid> 
-    )
-} else {return <div>...</div>}
+       </Grid>
+        )
+    } else { return <div>...</div> }
 }
+
 function BestPlayers(props) {
-  if(props.players.playerList && props.players.pitcherList){
-return(
-  <Container>
-  <Table style={{width: '45vw'}} unstackable>
+    if (props.players.playerList && props.players.pitcherList) {
+        return (
+            <Container>
+  <Table style={{width: '45vw'}} collapsible>
   <Table.Header>
       <Table.Row style={{fontSize: '1rem', fontWeight: 600}}>
          <Table.HeaderCell>Best MLB 2018 Hitter </Table.HeaderCell>
@@ -571,11 +531,7 @@ return(
     </Table.Body>
   </Table>
   </Container>
-  ) 
-} else {return <div></div>}
+        )
+    } else { return <div></div> }
 }
-export { BestFive, BestPlayers, ClassPicker, CurrentParams, Divisions, Batters, Pitchers, Stats, TeamList, YearPicker} ;
-
-
-
-
+export { BestFive, BestPlayers, ClassPicker, Divisions, Batters, Pitchers, Stats, YearPicker };

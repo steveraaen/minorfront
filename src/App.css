@@ -1,8 +1,14 @@
 body {
  background-color: SlateGray;
   padding: 2vw;
+  color: LemonChiffon;
 }
 
 .recharts-wrapper {
 	padding-top: -20;
+}
+table thead tr:first-child > th {
+     position: sticky !important;
+     top: 0;
+     z-index: 2;
 }
