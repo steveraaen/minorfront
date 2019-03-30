@@ -15,8 +15,21 @@ function YearPicker(props) {
     }
     return (
         <div>  
+    <Segment > 
+        <Form.Group>
 
-    <Segment> 
+             <Form.Checkbox 
+             toggle
+               label={'All Years'}
+               value={'20%'}
+               key={'AllYears'} 
+               onChange={handleChange}
+               checked={props.selectedYear === '20%'}
+               >
+               </Form.Checkbox>
+        </Form.Group>
+        </Segment> 
+    <Segment style={{marginTop: 0, height: '20vh'}}> 
         <Form.Group>
         { props.years.map((yr, idx) => {
           return(
@@ -45,7 +58,7 @@ function ClassPicker(props) {
         /*      props.getBestMinors(JSON.parse(value).code, props.selectedDivision.value, JSON.parse(value).regex, props.selectedYear) 
          */
         props.setSelectedClass(value)
-        props.getTopTen(value, props.selectedYear, props.selectedDivision.value)
+        props.getTopTen(value.name, props.selectedYear, props.selectedDivision.value)
         /*        props.getPlayerList(value.regex, props.selectedMiLBTeam.franchise, props.selectedYear, props.selectedMiLBTeam.name)
          */
     }
@@ -63,13 +76,13 @@ function ClassPicker(props) {
          toggle
           key={'allClasses'}
           label={"All MiLB Classes"}
-          value={tempObj.name}          
+          value={tempObj}          
           onChange={handleChange}
-          checked={props.selectedClass === tempObj.name}
+          checked={props.selectedClass === tempObj}
         />
         </Form.Group>
     </Segment>
-      <Segment> 
+      <Segment style={{marginTop: 0, height: '20vh'}}> 
         <Form.Group>
         { props.classes.map((cl, idx) => {
           return(
@@ -77,9 +90,9 @@ function ClassPicker(props) {
              toggle
              label={cl.name}
              key={cl.regex} 
-             value={cl.name}
+             value={cl}
              onChange={handleChange}
-             checked={props.selectedClass === cl.name}
+             checked={props.selectedClass === cl}
              >
              </Form.Checkbox>
             )
@@ -114,7 +127,7 @@ function Divisions(props) {
         </Form.Group>
     </Segment>
     <div style={{display: 'flex', flexDirection: 'row'}}>
-    <Segment >
+    <Segment  style={{marginTop: 0, height: '20vh'}}>
      <Form.Group>     
         <Form.Checkbox
          toggle
@@ -140,7 +153,7 @@ function Divisions(props) {
        })}     
     </Form.Group>
     </Segment>
-    <Segment style={{marginTop: 0, paddingBottom: -6}}>
+    <Segment style={{marginTop: 0, height: '20vh'}}>
      <Form.Group>   
         <Form.Checkbox
          toggle
@@ -357,7 +370,7 @@ function BestFive(props) {
             
             </Table.HeaderCell>
             <Table.HeaderCell  
-            onClick={() => handleBSort('bH')}
+            onClick={() => handleBSort('bH')}>
            >Hits
             
             </Table.HeaderCell>
