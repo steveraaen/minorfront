@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card, Container, Divider, Form, Grid, Header, Image, Loader, Modal, Placeholder, Statistic, Segment, Sticky, Table } from 'semantic-ui-react'
-import Collapsible from 'react-collapsible';
+import { Container,  Form, Grid,  Image, Loader, Modal, Placeholder, Statistic, Segment,  Table } from 'semantic-ui-react'
 import '../App.css'
 
 function YearPicker(props) {

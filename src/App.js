@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Header, Icon,  Segment } from 'semantic-ui-react'
+import { Grid, Header, Icon} from 'semantic-ui-react'
 
 import axios from 'axios'
 import Collapsible from 'react-collapsible';
-import { BestFive, BestPlayers, ClassPicker, CurrentParams, Batters, Pitchers,  YearPicker, Divisions, Stats } from './components/Selections.js'
-import MainChart from './components/MainChart'
+import { BestFive, ClassPicker,   YearPicker, Divisions, Stats } from './components/Selections.js'
+
 
 import './App.css'
 import classes from './classes.js'
 import mlbTeams from './mlbTeams.js'
-import leagues from './assets/leagues.js'
+/*import leagues from './assets/leagues.js'*/
 
 const yrs = [
 
@@ -27,7 +27,7 @@ function App() {
     const [selectedClass, setSelectedClass] = useState(classes[1]);
     const [minors, setMinors] = useState({});
     const [years] = useState(yrs);
-    const [bestMinors, setBestMinors] = useState();
+    const [/*bestMinors,*/ setBestMinors] = useState();
     const [allMLB] = useState(mlbTeams);
     const [selectedYear, setSelectedYear] = useState(yrs[0].value);
     const [playerList, setPlayerList] = useState();
@@ -35,18 +35,18 @@ function App() {
     const [classIcon] = useState('angle down');
     const [allDivisions, setAllDivisions] = useState();
     const [selectedDivision, setSelectedDivision] = useState({value: "%L%", display: "All Major League Teams"});
-    const [radialData, setRadialData] = useState();
+    const [/*radialData,*/ setRadialData] = useState();
     const [synthStats, setSynthStats] = useState();
     const [selectedMiLBTeam, setSelectedMiLBTeam] = useState();
-    const [statsToDb, setStatsToDb] = useState();
+  /*  const [statsToDb, setStatsToDb] = useState();*/
     const [topTenHit, setTopTenHit] = useState();
     const [topTenPitch, setTopTenPitch] = useState();
     const [topTen, setTopTen] = useState();
-    const [classStats, setClassStats] = useState();
-    const [column, setColumn] = useState();
-    const [direction, setDirection] = useState();
-    const [curSortB, setCurSortB] = useState({bsrt: "bBA", bsDir: "desc"});
-    const [curSortP, setCurSortP] = useState({psrt: "bBA", bsDir: "desc"});
+/*    const [classStats, setClassStats] = useState();*/
+   /* const [column, setColumn] = useState();*/
+ /*   const [direction, setDirection] = useState();*/
+/*    const [curSortB, setCurSortB] = useState({bsrt: "bBA", bsDir: "desc"});
+    const [curSortP, setCurSortP] = useState({psrt: "bBA", bsDir: "desc"});*/
     const [modalOpen, setModalOpen] = useState();
 
     function sortBTable(e) {  
@@ -228,7 +228,7 @@ function App() {
                if(plyr.teamID === allMLB[i].teamCode) {
                  plyr.color = allMLB[i].color
                  plyr.teamName = allMLB[i].teamName
-               }
+               } else{ return null}
              }
            })
            pitcherList.data.map((ptchr, idx) => {               
@@ -346,7 +346,7 @@ function App() {
         sortPTable={sortPTable}
         topTen={topTen}
         setTopTen={setTopTen}
-        classStats={classStats} 
+   
         selectedClass={selectedClass}
         allMLB={allMLB}
         setSelectedMiLBTeam={setSelectedMiLBTeam}
@@ -369,7 +369,7 @@ function App() {
             modalOpen={modalOpen}
             selectedMiLBTeam={selectedMiLBTeam} 
             selectedYear={selectedYear}
-            setStatsToDb={setStatsToDb}
+          
             selectedDivision={selectedDivision}
             selectedClass={selectedClass}
             {...pitcherList} 
